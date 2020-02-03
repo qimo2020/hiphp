@@ -1,0 +1,16 @@
+<script src="__PUBLIC_STATIC__/lib/layui/layui.js?v={:config('hiphp.version')}"></script>
+<script>
+    layui.use(['element', 'form'], function() {
+        var element = layui.element;
+        var form = layui.form;
+    });
+    layui.config({
+    	base: '__PUBLIC_STATIC__/lib/',
+        version: '{:config("hiphp.version")}'
+    }).extend({
+        layuihi: "hi/layuihi",
+        base: "hi/base",
+        func: "hi/func",
+        md5: "md5",
+    }).use(['base']);
+</script>

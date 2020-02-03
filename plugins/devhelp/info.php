@@ -1,0 +1,180 @@
+<?php
+/*
+ * 1.注意确保同一个插件配置中的字段名不能相同;
+ * 2.当用户操作清空某个字段值时，该字段会恢复本文件拥有的默认值，所以要注意设置好默认值;
+ */
+return [
+    'name' => 'devhelp',
+    // 模块唯一标识[必填]，格式：插件名.[应用市场ID].plugin.[应用市场分支ID]
+    'identifier' => 'devhelp.hi.plugin',
+    'theme' => 'default',
+    'mobile_theme' => 'default',
+    'title' => '后台开发助手',
+    'intro' => 'HiPHP后台开发助手',
+    'author' => 'HiPHP',
+    'icon' => '',
+    'version' => '1.0.0',
+    'author_url' => '',
+    'module_depend'=>[],
+    'tables'=>['devhelp_module','devhelp_plugin'],
+    'language'=>['china', 'english'],
+    'db_prefix'=>'pre_',
+    'config'=>[
+        [
+            'title'=>'配置1',
+            'url'=>url('plugin/setting',['group'=>'devhelp','tab'=>0]),
+            'fields'=>[
+                [
+                    'name'=>'thumb_size',//插件上传缩略图
+                    'group'=>'devhelp',
+                    'type'=>'input',
+                    'title'=>'上传缩略图',
+                    'tips'=>'上传缩略图',
+                    'value'=>'100x100;200x200',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_input',//插件配置字段名
+                    'group'=>'devhelp',
+                    'type'=>'input',
+                    'title'=>'input测试',
+                    'tips'=>'input测试',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_switch',
+                    'group'=>'devhelp',
+                    'type'=>'switch',
+                    'title'=>'switc测试',
+                    'tips'=>'switc测试',
+                    'value'=>'',
+                    'options'=>'0:关闭;1:开启'
+                ],
+                [
+                    'name'=>'test_checkbox',
+                    'group'=>'devhelp',
+                    'type'=>'checkbox',
+                    'title'=>'checkbox测试',
+                    'tips'=>'填在右上方',
+                    'value'=>'1,2',
+                    'options'=>'1:北京;2:上海;3:重庆',
+                ],
+                [
+                    'name'=>'test_image',
+                    'group'=>'devhelp',
+                    'type'=>'image',
+                    'title'=>'image测试',
+                    'tips'=>'image测试',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_file',
+                    'group'=>'devhelp',
+                    'type'=>'file',
+                    'title'=>'file测试',
+                    'tips'=>'file测试',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_radio',
+                    'group'=>'devhelp',
+                    'type'=>'radio',
+                    'title'=>'radio测试',
+                    'tips'=>'radio测试',
+                    'value'=>'',
+                    'options'=>'0:关闭;1:开启'
+                ],
+                [
+                    'name'=>'test_datetime',
+                    'group'=>'devhelp',
+                    'type'=>'datetime',
+                    'title'=>'datetime测试',
+                    'tips'=>'datetime测试',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_date',
+                    'group'=>'devhelp',
+                    'type'=>'date',
+                    'title'=>'date测试',
+                    'tips'=>'date测试',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_date2',
+                    'group'=>'devhelp',
+                    'type'=>'date',
+                    'title'=>'date22测试',
+                    'tips'=>'date22测试',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_title',
+                    'group'=>'devhelp',
+                    'type'=>'textarea',
+                    'title'=>'textarea测试',
+                    'tips'=>'填在右上方',
+                    'value'=>'这里是开发者助手描述哦',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_select',
+                    'group'=>'devhelp',
+                    'type'=>'select',
+                    'title'=>'select下拉保存',
+                    'tips'=>'填在右上方',
+                    'value'=>'',
+                    'options'=>'ueditor:UEditor;umeditor:UMEditor;kindeditor:KindEditor',
+                ]
+            ]
+        ],
+        [
+            'title'=>'配置2',
+            'url'=>url('plugin/setting',['group'=>'devhelp','tab'=>1]),
+            'fields'=>[
+                [
+                    'name'=>'test_des',
+                    'group'=>'devhelp',
+                    'type'=>'textarea',
+                    'title'=>'textarea测试',
+                    'tips'=>'textarea测试',
+                    'value'=>'textarea测试',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_color',
+                    'group'=>'devhelp',
+                    'type'=>'color',
+                    'title'=>'color类型测试',
+                    'tips'=>'填在右上方22',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_color2',
+                    'group'=>'devhelp',
+                    'type'=>'color',
+                    'title'=>'color类型测试22',
+                    'tips'=>'填在右上方22',
+                    'value'=>'',
+                    'options'=>''
+                ],
+                [
+                    'name'=>'test_array',
+                    'group'=>'devhelp',
+                    'type'=>'array',
+                    'title'=>'array测试',
+                    'tips'=>'请按如下格式填写：<br>键值:键名<br>键值:键名',
+                    'value'=>'',
+                    'options'=>''
+                ],
+            ]
+        ]
+    ]
+];

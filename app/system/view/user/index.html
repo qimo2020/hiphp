@@ -1,0 +1,63 @@
+
+<link rel="stylesheet" href="__MODULE_STATIC__/css/table.css?v={:config('hiphp.version')}">
+<div class="table-box">
+    <table id="dataTable"></table>
+</div>
+{include file="block/layui" /}
+<script type="text/html" id="statusTpl">
+    <input type="checkbox" name="status" value="{{ d.status }}" lay-skin="switch" lay-filter="switchStatus" lay-text="正常|关闭" {{ d.status == 1 ? 'checked' : '' }} data-href="{:url('status')}?table=user&id={{ d.id }}">
+</script>
+<script type="text/html" title="操作按钮模板" id="buttonTpl">
+    <a href="{:url('edit')}?id={{ d.id }}" class="layui-btn layui-btn-normal layui-btn-xs" title="修改管理员">修改</a>
+    <a href="{:url('remove')}?id={{ d.id }}" class="layui-btn layui-btn-xs layui-btn-danger j-tr-del">删除</a>
+</script>
+<script type="text/html" id="toolbar">
+    <div class="hi-table-tool">
+        <a href="{:url('add')}" class="layui-btn layui-btn-normal layui-btn-sm" title="添加管理员">&nbsp;添加</a>
+        <a data-href="{:url('status?v=1')}" class="layui-btn layui-btn-sm hi-table-ajax">&nbsp;启用</a>
+        <a data-href="{:url('status?v=0')}" class="layui-btn layui-btn-warm layui-btn-sm hi-table-ajax">&nbsp;禁用</a>
+        <a data-href="{:url('remove')}" class="layui-btn layui-btn-danger layui-btn-sm j-page-btns">&nbsp;删除</a>
+    </div>
+</script>
+<script type="text/javascript">
+    layui.use(['table'], function() {
+        var table = layui.table;
+        var roles = {:json_encode($roles)};
+        console.log(roles);
+        table.render({
+            elem: '#dataTable'
+            ,url: '{:url()}'
+            ,page: true
+            ,skin: 'row'
+            ,even: true
+            ,limit: 20
+            ,text: {
+                none : '暂无相关数据'
+            }
+            ,toolbar: '#toolbar'
+            ,defaultToolbar: ['filter']
+            ,cols: [[ //表头
+                {type:'checkbox'}
+                ,{field: 'username', title: '用户名'}
+                ,{field: 'nick', title: '昵称'}
+                ,{field: 'role_id', title: '角色', templet:function(d){
+                        var str = '';
+                        for(var i in d.role_id) {
+                            if (d.role_id[i]) {
+                                str += roles[d.role_id[i]].name;
+                                if(i < (d.role_id.length - 1)){
+                                    str += '&nbsp;/&nbsp;';
+                                }
+                            }
+                        }
+                        return str;
+                    }}
+                ,{field: 'mobile', title: '手机'}
+                ,{field: 'last_login_time', title: '最后登陆'}
+                ,{field: 'last_login_ip', title: '登陆IP'}
+                ,{field: 'status', title: '状态', templet: '#statusTpl'}
+                ,{title: '操作', width:120, templet: '#buttonTpl'}
+            ]]
+        });
+    });
+</script>
