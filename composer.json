@@ -1,11 +1,11 @@
 {
     "name": "qimo/hiphp",
-    "description": "the new thinkphp framework",
+    "description": "the background development framework",
     "type": "project",
     "keywords": [
+		"hiphp",
         "framework",
-        "thinkphp",
-        "hiphp"
+        "thinkphp"
     ],
     "homepage": "http://hiphp.net/",
     "license": "Apache-2.0",
