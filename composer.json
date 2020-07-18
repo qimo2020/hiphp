@@ -1,18 +1,18 @@
 {
-    "name": "topthink/think",
-    "description": "the new thinkphp framework",
+    "name": "qimo/hiphp",
+    "description": "the new thinkphp6.0 framework",
     "type": "project",
     "keywords": [
         "framework",
         "thinkphp",
         "ORM"
     ],
-    "homepage": "http://thinkphp.cn/",
-    "license": "Apache-2.0",
+    "homepage": "http://hiphp.net/",
+    "license": "none",
     "authors": [
         {
-            "name": "liu21st",
-            "email": "liu21st@gmail.com"
+            "name": "qimo",
+            "email": "hiphps@163.com"
         }
     ],
     "require": {
