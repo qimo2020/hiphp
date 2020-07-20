@@ -15,11 +15,9 @@
             "name": "hiphp",
             "email": "hiphps@163.com",
             "homepage": "http://www.hiphp.net",
-            "role": "Creator"
+            "role": "Creator2"
         }
     ],
-
-    
     "require": {
         "php": ">=7.1.0",
         "topthink/framework": "^6.0.0",
