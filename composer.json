@@ -1,14 +1,15 @@
 {
     "name": "qimo/hiphp",
-    "description": "the new thinkphp6.0 framework",
+    "description": "the new thinkphp6 framework",
     "type": "project",
     "keywords": [
+        "hiphp",
         "framework",
         "thinkphp",
         "ORM"
     ],
     "homepage": "http://hiphp.net/",
-    "license": "none",
+    "license": "",
     "authors": [
         {
             "name": "qimo",
