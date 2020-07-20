@@ -1,6 +1,6 @@
 {
     "name": "qimo/hiphp",
-    "description": "the new thinkphp6 framework",
+    "description": "the hiphp admin framework",
     "type": "project",
     "keywords": [
         "hiphp",
@@ -9,11 +9,13 @@
         "ORM"
     ],
     "homepage": "http://hiphp.net/",
-    "license": "",
+    "license": "Apache-2.0",
     "authors": [
         {
-            "name": "qimo",
-            "email": "hiphps@163.com"
+            "name": "hiphp",
+            "email": "hiphps@163.com",
+            "homepage": "http://www.hiphp.net",
+            "role": "Creator"
         }
     ],
     "require": {
