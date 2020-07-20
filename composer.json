@@ -18,6 +18,7 @@
             "role": "Creator"
         }
     ],
+    
     "require": {
         "php": ">=7.1.0",
         "topthink/framework": "^6.0.0",
