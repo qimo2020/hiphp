@@ -1,5 +1,5 @@
 
-<link rel="stylesheet" href="__MODULE_STATIC__/css/table.css?v={:config('hiphp.version')}">
+<link rel="stylesheet" href="__PUBLIC_STATIC__/p_builder/css/table.css?v={:config('builder.version')}?v={:config('hiphp.version')}">
 <div class="table-box">
     <table id="dataTable"></table>
 </div>
@@ -42,7 +42,7 @@
                 ,{field: 'role_id', title: '角色', templet:function(d){
                         var str = '';
                         for(var i in d.role_id) {
-                            if (d.role_id[i]) {
+                            if (roles[d.role_id[i]]) {
                                 str += roles[d.role_id[i]].name;
                                 if(i < (d.role_id.length - 1)){
                                     str += '&nbsp;/&nbsp;';
