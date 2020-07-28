@@ -9,17 +9,27 @@
 // | Author: 祈陌 <3411869134@qq.com>，开发者QQ群：829699898
 // +----------------------------------------------------------------------
 
-namespace plugins\cloud\home;
-use think\exception\HttpException;
+namespace app\system\model;
 
-class Push extends Base
+use think\Model;
+use think\facade\Cache;
+use think\facade\Db;
+/**
+ * 主题模型
+ * @package app\system\model
+ */
+class SystemTheme extends Model
 {
-    public function connect(){
-        if(!$this->request->isPost()){
-            throw new HttpException(404, '[404] page not found');
+    public static function getThemes(){
+        $infos = cache('theme_infos');
+        if(!$infos){
+            if($res = Db::name('system_theme')->select()->toArray()){
+                Cache::tag('theme_tag')->set('theme_infos', $res);
+                return $res;
+            }
+            return false;
         }
-        $params = $this->request->param();
-        return json($params);
+        return $infos;
     }
 
 }

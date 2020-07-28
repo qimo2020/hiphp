@@ -9,17 +9,20 @@
 // | Author: 祈陌 <3411869134@qq.com>，开发者QQ群：829699898
 // +----------------------------------------------------------------------
 
-namespace plugins\cloud\home;
-use think\exception\HttpException;
+namespace app\system\validate;
 
-class Push extends Base
+use think\Validate;
+
+/**
+ * 配置验证器
+ * @package app\system\validate
+ */
+class SystemConfig extends Validate
 {
-    public function connect(){
-        if(!$this->request->isPost()){
-            throw new HttpException(404, '[404] page not found');
-        }
-        $params = $this->request->param();
-        return json($params);
-    }
-
+    //定义验证规则
+    protected $rule = [
+        'name|配置标识'	=> 'require|unique:system_config',
+        'title|配置标题' => 'require',
+        'type|配置类型'	=> 'require',
+    ];
 }

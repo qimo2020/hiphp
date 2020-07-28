@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 
 namespace plugins\cloud\home;
+
 use app\system\model\SystemUser as UserModel;
 use hi\Dir;
 use hi\PclZip;
@@ -161,8 +162,9 @@ class Upgrade extends Base
                 self::$error = '应用已存在';
                 return false;
             }
+
             // 安装包应用目录
-            $appTempPath = isset($params['app_type']) == 'system' ? $tempAppDir . '/' : $tempAppDir .'/' . $params['app_name'] . '/';
+            $appTempPath = isset($params['app_type']) && $params['app_type'] == 'system' ? $tempAppDir . '/' : $tempAppDir .'/' . $params['app_name'] . '/';
             // 应用[模块/插件]获取安装包基本信息
             if($dependAppIns){
                 $infoFilePath = $appTempPath . 'info.php';
@@ -216,16 +218,26 @@ class Upgrade extends Base
                 }
             }else{
                 if(in_array($params['app_type'], ['module', 'plugin'])){
-                    $infoData['app_id'] = $params['app_id'];
-                    $infoData['app_keys'] = $params['app_key'];
-                    $config = var_export($infoData, true);
-                    $config = str_replace(['array (', ')'], ['[', ']'], $config);
-                    $config = preg_replace("/(\s*?\r?\n\s*?)+/", "\n", $config);
-                    $code = <<<INFO
-<?php
-return {$config};
-INFO;
-                    file_put_contents($infoFilePath, $code);
+                    $sql = [];
+                    $sql['name'] = $infoData['name'];
+                    $sql['identifier'] = $infoData['identifier'];
+                    if(isset($info['theme']) && $infoData['theme']){
+                        $sql['theme'] = $infoData['theme'];
+                    }
+                    if(isset($info['mobile_theme']) && $infoData['mobile_theme']){
+                        $sql['mobile_theme'] = $infoData['mobile_theme'];
+                    }
+                    $sql['title'] = $infoData['title'];
+                    $sql['intro'] = $infoData['intro'];
+                    $sql['author'] = $infoData['author'];
+                    $sql['icon'] = $infoData['icon'] ? ROOT_DIR . substr($infoData['icon'], 1) : '';
+                    $sql['version'] = $infoData['version'];
+                    $sql['url'] = $infoData['author_url'];
+                    $sql['status'] = 0;
+                    $sql['system'] = 0;
+                    $sql['app_id'] = $params['app_id'];
+                    $sql['app_keys'] = $params['app_key'];
+                    $create = \app\system\model\SystemPlugin::create($sql);
                 }else{
                     $sql['name'] = $params['app_name'];
                     $sql['title'] = $infoData['title'];

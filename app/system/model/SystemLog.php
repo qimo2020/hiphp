@@ -9,17 +9,20 @@
 // | Author: 祈陌 <3411869134@qq.com>，开发者QQ群：829699898
 // +----------------------------------------------------------------------
 
-namespace plugins\cloud\home;
-use think\exception\HttpException;
+namespace app\system\model;
 
-class Push extends Base
+use think\Model;
+
+/**
+ * 后台日志模型
+ * @package app\system\model
+ */
+class SystemLog extends Model
 {
-    public function connect(){
-        if(!$this->request->isPost()){
-            throw new HttpException(404, '[404] page not found');
-        }
-        $params = $this->request->param();
-        return json($params);
+    protected $autoWriteTimestamp = true;
+    
+    public function user()
+    {
+        return $this->hasOne('systemUser', 'id', 'uid');
     }
-
 }

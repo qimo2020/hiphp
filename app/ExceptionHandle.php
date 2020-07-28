@@ -53,6 +53,9 @@ class ExceptionHandle extends Handle
         // 添加自定义异常处理机制
         if(!$this->app->isDebug()){
             $data['code'] = $e->getCode();
+            if(method_exists($e, "getStatusCode")){
+                $data['httpCode'] = $e->getStatusCode();
+            }
             if ($e instanceof HttpResponseException) {
                 return $e->getResponse();
             }elseif ($e instanceof HttpException) { //http异常

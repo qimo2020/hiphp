@@ -9,17 +9,19 @@
 // | Author: 祈陌 <3411869134@qq.com>，开发者QQ群：829699898
 // +----------------------------------------------------------------------
 
-namespace plugins\cloud\home;
-use think\exception\HttpException;
+namespace app\system\validate;
 
-class Push extends Base
+use think\Validate;
+
+/**
+ * 插件验证器
+ * @package app\system\validate
+ */
+class SystemPlugin extends Validate
 {
-    public function connect(){
-        if(!$this->request->isPost()){
-            throw new HttpException(404, '[404] page not found');
-        }
-        $params = $this->request->param();
-        return json($params);
-    }
-
+    protected $rule = [
+        'name|插件名' => 'require|alphaDash|unique:system_plugin',
+        'title|插件标题' => 'require',
+        'identifier|插件标识' => 'require|unique:system_plugin',
+    ];
 }

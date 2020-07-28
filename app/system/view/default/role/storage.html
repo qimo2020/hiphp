@@ -1,0 +1,125 @@
+<style>
+    .auth-list{
+        width: 98%;
+        margin:0 auto;
+        background-color: #f9f9f9;
+    }
+    .auth-list dd{
+        margin-left:20px;
+    }
+    .layui-tab-content{padding:15px 0}
+    .layui-form-checkbox{
+        margin:15px;
+    }
+    .layui-form-checkbox span{
+        font-size: 15px;
+    }
+    .hi-submit,.layui-input-block{
+        padding:20px 35px;
+        margin-left:0;
+    }
+</style>
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="layui-tab-item layui-show">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input field-name" name="name" lay-verify="required" autocomplete="off" placeholder="请输入角色名称">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色简介</label>
+            <div class="layui-input-inline">
+                <textarea  class="layui-textarea field-intro" name="intro" lay-verify="" autocomplete="off" placeholder="[选填]角色简介"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色状态</label>
+            <div class="layui-input-inline">
+                <input type="radio" class="field-status" name="status" value="1" title="启用" checked>
+                <input type="radio" class="field-status" name="status" value="0" title="禁用">
+            </div>
+        </div>
+    </div>
+    <div class="layui-tab-item layui-form">
+        <div class="auth-list">
+            {volist name="nodes" id="v" key="k"}
+            <dl>
+                <dt style="background-color: #f4f4f4">
+                    <input type="checkbox" name="auth[]" value="{$v.id}" data-pid="{$v.pid}" title="{$v.title}" lay-filter="nodeAuth" lay-skin="primary"  {if isset($v.ischeck) && $v.ischeck == 1}checked {/if}>
+                </dt>
+                <dd>
+                    {if !empty($v.child)}
+                    {volist name="$v['child']" id="vv" key="kk"}
+                    <dl>
+                        <dt>
+                            <input type="checkbox" name="auth[]" value="{$vv.id}" data-pid="{$vv.pid}" title="{$vv.title}" lay-filter="nodeAuth" lay-skin="primary" {if isset($vv.ischeck) && $vv.ischeck == 1}checked {/if}>
+                        </dt>
+                        <dd>
+                            {if !empty($vv.child)}
+                            {volist name="$vv['child']" id="vvv" key="kkk"}
+                            {if !empty($vvv.child)}
+                            <dl>
+                                <dt>
+                                    <input type="checkbox" name="auth[]" value="{$vvv.id}" data-pid="{$vvv.pid}" title="{$vvv.title}" lay-filter="nodeAuth" lay-skin="primary" {if isset($vvv.ischeck) && $vvv.ischeck == 1}checked {/if}>
+                                </dt>
+                                <dd>
+                                    {volist name="$vvv.child" id="vvvv" key="kkkk"}
+                                    <input type="checkbox" name="auth[]" value="{$vvvv.id}" data-pid="{$vvvv.pid}" title="{$vvvv.title}" lay-filter="nodeAuth" lay-skin="primary" {if isset($vvvv.ischeck) && $vvvv.ischeck == 1}checked {/if}>
+                                    {/volist}
+                                </dd>
+                            </dl>
+                            {else/}
+                            <input type="checkbox" name="auth[]" value="{$vvv.id}" data-pid="{$vvv.pid}" title="{$vvv.title}" lay-filter="nodeAuth" lay-skin="primary" {if isset($vvv.ischeck) && $vvv.ischeck == 1}checked {/if}>
+                            {/if}
+                            {/volist}
+                            {/if}
+                        </dd>
+                    </dl>
+                    {/volist}
+                    {/if}
+                </dd>
+            </dl>
+            {/volist}
+        </div>
+
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" class="field-id" name="id">
+            <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">提交</button>
+            <a href="javascript:window.history.back(-1);" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+            <div style="display:none;" id="formBtn"></div>
+        </div>
+    </div>
+</form>
+{include file="block/layui" /}
+<script>
+    var formData = {:json_encode($formData)};
+    layui.use(['form','func','element'], function() {
+        var form = layui.form, $ = layui.jquery,element = layui.element;
+        layui.func.assign(formData);
+        form.on('checkbox(nodeAuth)', function(data) {
+            var checkParent = function (id) {
+                var parendNode = $('.auth-list input[value="'+id+'"]');
+                var pid = parendNode.attr('data-pid') || '';
+                if(!parendNode.is(':checked')) {
+                    parendNode.prop('checked', true);
+                }
+                if (pid == '') {
+                    return false;
+                }
+                checkParent(pid);
+            };
+            var child = $(data.elem).parent('dt').siblings('dd').find('input');
+            child.each(function (index, item) {
+                item.checked = data.elem.checked;
+            });
+            checkParent($(data.elem).attr('data-pid'));
+            form.render('checkbox');
+        });
+        element.on('tab(form-block-tab)', function(data){
+            $('.layui-tab-content .layui-tab-item').eq(data.index).addClass('layui-show').siblings().removeClass('layui-show');
+        });
+    })
+</script>

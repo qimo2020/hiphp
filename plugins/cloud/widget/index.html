@@ -8,18 +8,20 @@ $type = strtolower(request()->controller());
 {/php}
 <script>
     layui.use(['table', 'jquery', 'layer', 'md5'], function() {
-        var $ = layui.jquery, layer = layui.layer, token = '{:config("hi_cloud.token")}', clientIp = '{:getClientIp()}', md5 = layui.md5;
-        var host = window.location.host;
+        var $ = layui.jquery, layer = layui.layer, sid = '{if isset($requests)}{$requests["sid"]}{/if}',token = '{if isset($requests)}{$requests["token"]}{/if}', clientIp = '{:getClientIp()}', md5 = layui.md5;
+        var params = JSON.parse('{:urldecode(json_encode($requests))}');
         var checkConnect = function(){
             let promise = new Promise(function (resolve, reject) {
                 if(!token){
                     resolve({'code':0});
                     return this;
                 }
+                params.version = '{:config("hiphp.version")}';
                 $.ajax({
-                    dataType: 'json',
                     url:'{$data["apiUrl"]}connect',
-                    data:'domain=' + host + '&version={:config("hiphp.version")}',
+                    type: 'post',
+                    dataType: 'json',
+                    data: params,
                     error: function(){
                         if($('.connect-tips')){
                             $('.connect-tips').html('<span style="color:red">通信异常</span>');

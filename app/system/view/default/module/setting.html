@@ -1,0 +1,235 @@
+<style type="text/css">
+.layui-form-item{padding-top:25px;}
+.layui-form-item .layui-form-label{width:10%;}
+.layui-form-item .layui-input-inline{width:40%;}
+.layui-form-item .layui-input, .layui-form-item .layui-textarea{width: 100%}
+.layui-form-mid code {color: #5FB878;}
+.layui-form-mid {padding: 0!important;}
+</style>
+{include file="block/layui" /}
+<form class="layui-form" action="{:url()}" method="post">
+    <div class="page-form">
+        {volist name="formData['config']" id="value"}
+            {volist name="$value['fields']" id="v"}
+            {switch name="v['type']"}
+                {case value="textarea"}
+                    <!--多行文本-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <textarea rows="6"  class="layui-textarea" name="{$v['name']}" autocomplete="off" placeholder="请填写{$v['title']}">{:htmlspecialchars_decode($v['value'])}</textarea>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="array"}
+                    <!--文本域-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <textarea rows="6" class="layui-textarea" name="{$v['name']}" autocomplete="off" placeholder="请填写{$v['title']}">{:htmlspecialchars_decode($v['value'])}</textarea>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="switch"}
+                    <!--开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="{$v['name']}" value="{$v['value']}" lay-filter="switchOp" lay-skin="switch" lay-text="{$v['options'][1]}|{$v['options'][0]}" {if condition="$v['value'] == 1"}checked{/if}>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="select"}
+                    <!--下拉框-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <select name="{$v['name']}">
+                                {volist name="v['options']" id="vv"}
+                                    <option value="{$key}" {if condition="$key eq $v['value']"}selected{/if}>{$vv}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="radio"}
+                    <!--单选-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            {volist name="v['options']" id="vv"}
+                                <input type="radio" name="{$v['name']}" value="{$key}" title="{$vv}" {if condition="$key eq $v['value']"}checked{/if}>
+                            {/volist}
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="checkbox"}
+                    <!--多选-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            {volist name="v['options']" id="vv"}
+                                <input type="checkbox" name="{$v['name']}[]" value="{$key}" title="{$vv}" lay-skin="primary" {if condition="in_array($key, explode(',', $v['value']))"}checked{/if}>
+                            {/volist}
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="date"}
+                    <!--日期-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input layui-date" name="{$v['name']}" value="{$v['value']}" autocomplete="off" placeholder="请填写{$v['title']}">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="datetime"}
+                    <!--日期+时间-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input layui-date" name="{$v['name']}" value="{$v['value']}" autocomplete="off" placeholder="请填写{$v['title']}">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="image"}
+                    <!--图片-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline upload">
+                            <button type="button" name="upload" class="layui-btn layui-btn-primary layui-upload" {if isset($value['image_save_dir']) && $value['image_save_dir']}data-savedir="{$value['image_save_dir']}" {/if}lay-data="{{if condition="!empty($v['url'])"}url: '{:url($v['url'])}', {/if}exts:'{:str_replace(',', '|', config('upload.image_ext'))}', accept:'image'}" lay-data="{accept:'image'}" lay-type="image">请上传{$v['title']}</button>
+                            <input type="hidden" class="upload-input" name="{$v['name']}" value="{$v['value']}">
+                            {if condition="$v['value']"}
+                                <img src="{$v['value']}" style="display:inline-block;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+                            {else /}
+                                <img src="" style="display:none;border-radius:5px;border:1px solid #ccc" width="36" height="36">
+                            {/if}
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="file"}
+                    <!--文件-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline upload">
+                            <button type="button" name="upload" class="layui-btn layui-btn-primary layui-upload" {if isset($value['file_save_dir']) && $value['file_save_dir']}data-savedir="{$value['file_save_dir']}" {/if}lay-data="{{if condition="!empty($v['url'])"}url: '{:url($v['url'])}', {/if}exts:'{:str_replace(',', '|', config('upload.file_ext'))}', accept:'file'}">请上传{$v['title']}</button>
+                            <input type="hidden" class="upload-input" name="{$v['name']}" value="{$v['value']}">
+                            {if condition="$v['value']"}
+                            <span>
+                                    {php}
+                                     echo pathinfo($v['value'],PATHINFO_BASENAME)
+                                    {/php}
+                                </span>
+                            {else}
+                            <span></span>
+                            {/if}
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+                {/case}
+                {case value="color"}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">{$v['title']}</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="{$v['name']}" value="{$v["value"]}" placeholder="请选择颜色" class="layui-input color_{$v['name']}">
+                    </div>
+                    <div class="layui-inline">
+                        <div class="color-form-{$v['name']}"></div>
+                    </div>
+                </div>
+                <script type="application/javascript">
+                    layui.use(['colorpicker'], function() {
+                        var $ = layui.jquery, colorpicker = layui.colorpicker;
+                        colorpicker.render({
+                            elem: '.color-form-{$v["name"]}'
+                            ,color: '{if $v["value"]}{$v["value"]}{else/}#1c97f5{/if}'
+                            ,done: function(color){
+                                $('.color_{$v["name"]}').val(color);
+                            }
+                        });
+                    })
+                </script>
+                {/case}
+                {case value="hidden"}
+                    <input type="hidden" name="{$v['name']}" value="{$v['value']}">
+                {/case}
+                {default /}
+                    <!--单行文本-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">{$v['title']}</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" name="{$v['name']}" value="{$v['value']}" autocomplete="off" placeholder="请填写{$v['title']}">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">{:htmlspecialchars_decode($v['tips'])}<br>调用方式<code>config('{if condition="isset($v['module'])"}module_{/if}{:input('param.group', $group)}.{$v['name']}')</code></div>
+                    </div>
+            {/switch}
+            {/volist}
+        {/volist}
+        <div class="layui-form-item">
+            <label class="layui-form-label"> </label>
+            <div class="layui-input-block">
+                {:token_field()}
+                <input type="hidden" class="field-id" name="id" value="{$formData['module']}">
+                <input type="hidden" class="field-group" name="group" value="{$group}">
+                <input type="hidden" class="field-tab" name="tab" value="{$tab}">
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="formSubmit">提交</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary ml10"><i class="aicon ai-fanhui"></i>返回</a>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    layui.use(['jquery', 'laydate', 'upload', 'func','form'], function() {
+        var $ = layui.jquery, laydate = layui.laydate, layer = layui.layer, upload = layui.upload,form = layui.form;
+        layui.func.assign({:json_encode($formData)});
+        $('.layui-upload').each(function(i) {
+            var uploadUrl = '{:url("system/annex/upload?group=p_".$formData["name"])}&temp=0';
+            if($(this).attr('data-savedir')){
+                uploadUrl += '&save_dir='+$(this).attr('data-savedir');
+            }
+            var options = {
+                elem: $('.layui-upload')[i]
+                , url: uploadUrl
+                , method: 'post'
+                , before: function (input) {
+                    layer.msg('文件上传中...', {time: 3000000});
+                }, done: function (res, obj) {
+                    var obj = this.item;
+                    if (res.code == 0) {
+                        layer.msg(res.msg);
+                        return false;
+                    }
+                    layer.closeAll();
+                    var input = $(obj).parents('.upload').find('.upload-input');
+                    if ($(obj).attr('lay-type') == 'image') {
+                        input.siblings('img').attr('src', res.data.file).show();
+                    } else {
+                        var fileArr = res.data.file.split('/');
+                        input.siblings('span').text(fileArr[fileArr.length - 1]);
+                    }
+                    input.val(res.data.file);
+                }
+            }
+            upload.render(options);
+        })
+        /* 绑定多个日期控件 */
+        $('.layui-date').each(function(i) {
+            laydate.render({
+                elem: this
+                ,trigger: 'click'
+            });
+        });
+        form.on('switch(switchOp)',function(data){
+            data.elem.checked?$(this).val(1):$(this).val(0);
+        })
+    });
+</script>

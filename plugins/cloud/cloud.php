@@ -34,6 +34,12 @@ class cloud extends Plugin
             'apiUrl'=>$cloudObj->apiUrl,
             'apiBind'=>$cloudObj->apiUrl.$cloudObj->apiBind
         ];
+        if(config('hi_cloud.sid') && config('hi_cloud.token')){
+            $requests = ['sid'=>config('hi_cloud.sid'), 'timestamp'=>time(), 'domain'=>str_replace(request()->scheme().'://','', request()->domain()), 'rand'=>randomStr(6,7)];
+            $requests['token'] = \hi\Sign::getSign($requests, config('hi_cloud.token'));
+            $this->assign('requests', $requests);
+        }
+        $this->assign('test', ['test']);
         $this->assign('params', $params);
         $this->assign('data', $data);
         $this->view('index');
