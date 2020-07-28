@@ -1,0 +1,39 @@
+.layui-form-item{padding-top:15px;}
+.layui-form-item .layui-form-label{
+    width:15%;
+    text-align: right;
+    white-space: nowrap;
+    color: #333;
+    font-weight: 500;
+}
+.layui-form-label:after{
+    content: ":";
+    position: relative;
+    top: -.5px;
+    margin: 0 8px 0 2px;
+}
+.no-after:after{
+    content: "";
+}
+.layui-form-item .layui-input-inline{width:55%;}
+.layui-form-item .hi-editor{width:80%;}
+.layui-form-item .layui-input, .layui-form-item .layui-textarea{width: 100%}
+.layui-form-mid{ padding-left:15px !important;}
+.layui-form-mid code {color: #5FB878;}
+.buildForm{
+    background-color: #fff;
+    padding:10px;
+}
+.item-html{
+    padding: 0.55rem 0;
+    font-size: 0.9rem;
+}
+/*多图*/
+.pic-items { width:100%; float:left; margin: 10px 0px 0px 0px;}
+.pic-items li { width:50px; float: left; margin-right: 5px;}
+.pic-items li .layui-input { display: initial; }
+.multi-priview .item_img img{ width: 50px; height: 50px;}
+.multi-priview li{position: relative;border-radius: 3px;border: 1px solid rgb(204, 204, 204);}
+.multi-priview li .operate{ color: #000; display: none;}
+.multi-priview li .close{position: absolute; top: 0; right: 0;cursor:pointer;}
+.multi-priview li:hover .operate{ display: block;}
