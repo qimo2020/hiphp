@@ -77,7 +77,7 @@ class SystemRole extends Model
      */
     public static function getRoleAuth($id)
     {
-        $where['id'] = strpos((string)$id, ',') !== false ? ['in',implode(',', $id)] : $id;
+        $where['id'] = is_array($id) ? ['in',implode(',', $id)] : $id;
         $rows = self::where($where)->field('auth')->select()->toArray();
         $auths = [];
         foreach ($rows as $k => $v) {
