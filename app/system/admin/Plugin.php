@@ -58,6 +58,10 @@ class Plugin extends Base
         $this->tabData = $tabData;
         $this->appPath = base_path();
         $this->rootPath = root_path();
+        //重定向地址解析
+        $tmparr = parse_url($_SERVER["HTTP_REFERER"]);
+        $this->rstr = empty($tmparr['scheme']) ? 'http://' : $tmparr['scheme'] . '://';
+        $this->rstr .= $tmparr['host'] . $tmparr['path'];
     }
 
     /**
@@ -121,7 +125,6 @@ class Plugin extends Base
                 $plugins[] = $v;
             }
             $pushs = runHook('cloud_push', ['type'=>'plugin', 'method'=>$status == 3 ? 'upgrade' : 'download'], true);
-            print_r($pushs);
             if($pushs && $pushs[0]){
                 foreach ($plugins as $k=>$v){
                     foreach ($pushs[0] as $kk=>$vv){
@@ -439,7 +442,6 @@ class Plugin extends Base
             if (!HookPluginModel::storage($pluginObj->hooks, $plug['name'])) {
                 return '安装插件钩子时出现错误，请重新安装';
             }
-            Cache::tag('plugin_tag')->clear();
         }
 
         // 导入SQL
@@ -542,12 +544,13 @@ class Plugin extends Base
                     }
                 }
             }
-            Cache::tag('menus')->clear();
-            Cache::tag('lang_'.$plug['name'])->clear();
         }
         if (!$pluginObj->installAfter()) {
             return '插件安装后的方法执行失败（原因：' . $pluginObj->getError() . '）';
         }
+        Cache::tag('plugin_tag')->clear();
+        Cache::tag('menus')->clear();
+        Cache::tag('lang_'.$plug['name'])->clear();
         return true;
     }
 
@@ -585,7 +588,6 @@ class Plugin extends Base
             if (!HookPluginModel::del($plug['name'])) {
                 return $this->response(0, '插件相关钩子删除失败');
             }
-            Cache::tag('plugin_tag')->clear();
             // 导入SQL
             $sqlFile = realpath($plugPath . 'sql/uninstall.sql');
             $post = $this->request->post();
@@ -637,7 +639,6 @@ class Plugin extends Base
             if (!$model->del($plug['name'])) {
                 return $this->response(0, '插件配置信息删除失败');
             }
-            ConfigModel::getConfigs('', true);
             //删除语言数据
             $res = LangModel::langClear($plug['name']);
             if ($res) {
@@ -646,6 +647,8 @@ class Plugin extends Base
             }
             //更新缓存
             Cache::tag('menus')->clear();
+            Cache::tag('plugin_tag')->clear();
+            Cache::tag('hiphp_config')->clear();
             if (!$pluginObj->uninstallAfter()) {
                 return $this->response(0, '插件卸载后的方法执行失败（原因：' . $pluginObj->getError() . '）');
             }
@@ -736,11 +739,7 @@ class Plugin extends Base
         }
         Cache::tag('plugin_tag')->clear();
 
-        $tmparr = parse_url($_SERVER["HTTP_REFERER"]);
-        $rstr = empty($tmparr['scheme']) ? 'http://' : $tmparr['scheme'] . '://';
-        $rstr .= $tmparr['host'] . $tmparr['path'];
-
-        return $this->response(1, '操作成功', $rstr);
+        return $this->response(1, '操作成功', $this->rstr);
     }
 
     public function del($id = 0)
@@ -762,7 +761,7 @@ class Plugin extends Base
             return $this->response(0, '插件数据删除失败');
         }
         Cache::tag('plugin_tag')->clear();
-        return $this->response(1, '插件删除成功');
+        return $this->response(1, '插件删除成功', $this->rstr);
     }
 
     /**

@@ -68,7 +68,7 @@ VALUES
   ('19', '1', 'upload', '图片水印透明度', 'image_watermark_opacity', '50', 'input', '', '', '可设置值为0~100，数字越小，透明度越高', '8', '1', '1573109710', '1573109779'),
   ('20', '1', 'upload', '图片水印图位置', 'image_watermark_location', '9', 'select', '7:左下角\r\n1:左上角\r\n4:左居中\r\n9:右下角\r\n3:右上角\r\n6:右居中\r\n2:上居中\r\n8:下居中\r\n5:居中', '', '', '9', '1', '1573109710', '1573109779'),
   ('21', '1', 'upload', '文件上传大小限制', 'file_size', '0', 'input', '', '', '单位：KB，0表示不限制大小', '1', '1', '1573109710', '1573109779'),
-  ('22', '1', 'upload', '允许上传文件格式', 'file_ext', 'doc,docx,xls,xlsx,ppt,pptx,pdf,wps,txt,rar,zip', 'input', '', '', '多个格式请用英文逗号（,）隔开', '2', '1', '1573109710', '1573109779'),
+  ('22', '1', 'upload', '允许上传文件格式', 'file_ext', 'doc,docx,xls,xlsx,ppt,pptx,pdf,wps,txt,rar,zip,xml', 'input', '', '', '多个格式请用英文逗号（,）隔开', '2', '1', '1573109710', '1573109779'),
   ('23', '1', 'upload', '文字水印开关', 'text_watermark', '0', 'switch', '0:关闭\r\n1:开启', '', '', '10', '1', '1573109710', '1573109779'),
   ('24', '1', 'upload', '文字水印内容', 'text_watermark_content', '', 'input', '', '', '', '11', '1', '1573109710', '1573109779'),
   ('25', '1', 'upload', '文字水印字体', 'text_watermark_font', '', 'file', '', '', '不上传将使用系统默认字体', '12', '1', '1573109710', '1573109779'),
@@ -204,7 +204,7 @@ CREATE TABLE `hi_system_menu` (
 
 INSERT INTO `hi_system_menu` (`id`, `pid`, `module`, `title`, `icon`, `url`, `param`, `target`, `sort`, `debug`, `system`, `status`, `create_time`)
 VALUES
-('2', '0', 'system', '系统', 'icon iconfont iconsystem', 'system/system/index', '', '_self', '0', '0', '1', '1', '1573109779'),
+('2', '0', 'system', '系统', 'icon iconfont iconwindow', 'system/system/index', '', '_self', '0', '0', '1', '1', '1573109779'),
 ('3', '0', 'system', '插件', 'icon iconfont iconmodel', 'system/plugins/index', '', '_self', '0', '0', '1', '1', '1573109779'),
 ('4', '2', 'system', '用户管理', 'icon iconfont iconpeople', '', '', '_self', '2', '0', '1', '1', '1573109779'),
 ('5', '4', 'system', '管理员', 'icon iconfont iconadmin', 'system/user/index', '', '_self', '0', '0', '1', '1', '1573109779'),

@@ -257,12 +257,9 @@ class Common extends BaseController
             'wait' => $wait,
         ];
         $type = $this->getResponseType();
-        if ('html' == strtolower($type)) {
-            $type = 'view';
-        }
-        switch ($type) {
-            case 'view':
-                $response = Response::create(app()->config->get('app.dispatch_success_tmpl'), $type, 200)->header($header)->assign($result);
+        switch (strtolower($type)) {
+            case 'html':
+                $response = Response::create(app()->config->get('app.dispatch_success_tmpl'), 'view', 200)->header($header)->assign($result);
                 break;
             case 'json':
                 $response = Response::create($result, $type, 200)->header($header);

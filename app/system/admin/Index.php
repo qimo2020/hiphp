@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 namespace app\system\admin;
 use app\system\model\SystemMenu as MenuModel;
+use app\system\model\SystemModule as ModuleModel;
+use app\system\model\SystemPlugin as PluginModel;
 class Index extends Base
 {
     public function index()
@@ -19,6 +21,26 @@ class Index extends Base
             $homeInfo = ['title'=>'首页', 'url'=>'system/index/welcome','icon'=>'fa fa-home'];
             return json(['menuInfo'=>$menus, 'homeInfo'=>$homeInfo, 'module'=>app('http')->getName()]);
         }
+        $apps = array_merge(ModuleModel::getModules(), PluginModel::getPlugins());
+        $fontItems = [];
+        foreach ($apps as $k=>$v){
+            if($v['status'] == 2 && $v['system'] == 0){
+                if(strpos($v['identifier'], 'module') !== false){
+                    $rootPath = root_path() . 'app';
+                    $group = 'm_';
+                }else{
+                    $rootPath = root_path() . 'plugins';
+                    $group = 'p_';
+                }
+                if (file_exists($file = $rootPath . '/' . $v['name'] . '/info.php') && $info = include_once $file) {
+                    if(isset($info['iconfont']) && !empty($info['iconfont']) && file_exists(public_path() . ($font = 'static/' . $group . $v['name'] . '/' . $info['iconfont']))){
+                        $fontItems[$k]['link'] = $font;
+                        $fontItems[$k]['version'] = $v['version'];
+                    }
+                }
+            }
+        }
+        $this->assign('fontItems', $fontItems);
         return $this->view();
     }
 

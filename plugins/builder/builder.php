@@ -12,6 +12,10 @@ defined('IN_SYSTEM') or die('Access Denied');
  */
 class builder extends Plugin
 {
+    //[构建器额外js代码]
+    public $jsCode = '';
+    //[构建器额外css代码]
+    public $cssCode = '';
     // [通用添加、修改专用] 模型名称，格式：模块名/模型名
     public $hiModel = '';
     // [通用添加、修改专用] 表名(不含表前缀)
@@ -223,6 +227,8 @@ class builder extends Plugin
             }
             return json($data);
         }
+        $this->assign('jsCode', $this->jsCode);
+        $this->assign('cssCode', $this->cssCode);
         $this->assign('buildData', $this->buildData);
         return $this->view('build/table');
     }
@@ -276,7 +282,11 @@ class builder extends Plugin
                     $this->hiMakeValidate = $hiMakeValidate;
                 }
                 $postData = !empty($postData) ? $postData : $this->request->post();
-
+                foreach ($postData as $k=>$v){ //解析数组字段(如checkbox表单)
+                    if(!empty($v) && is_array($v)){
+                        $postData[$k] = json_encode($v);
+                    }
+                }
                 if ($this->hiValidate) {// 数据验证
                     if (strpos($this->hiValidate, '\\') === false) {
                         if (defined('IS_PLUGIN')) {
@@ -372,10 +382,14 @@ class builder extends Plugin
             if(method_exists($this->app,'annexGet')){
                 $row = $this->app->annexGet($row);
             }
+            foreach ($row as $k=>&$v){ //解析数组字段(如checkbox表单)
+                $format = json_decode((string)$v, true);
+                if($format) $v = $format;
+            }
             $this->buildData['buildForm']['items'][] = ['name'=>$pk, 'type'=>'hidden', 'value'=>$pkVal];
         }
         //合并赋值数据
-        if(!empty($this->assignData)){
+        if(!empty($row) && !empty($this->assignData)){
             foreach ($this->assignData as $k=>$v){
                 $row[$k] = $v;
             }

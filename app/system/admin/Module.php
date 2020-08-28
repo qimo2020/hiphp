@@ -34,7 +34,6 @@ class Module extends Base
     protected function initialize()
     {
         parent::initialize();
-
         $tabData['tab'] = [
             [
                 'title' => '已启用',
@@ -66,6 +65,10 @@ class Module extends Base
         $this->rootPath = root_path();
         $this->tempPath = $this->rootPath.'runtime/app/';
         $this->depr = config('view.view_depr');
+        //重定向地址解析
+        $tmparr = parse_url($_SERVER["HTTP_REFERER"]);
+        $this->rstr = empty($tmparr['scheme']) ? 'http://' : $tmparr['scheme'] . '://';
+        $this->rstr .= $tmparr['host'] . $tmparr['path'];
     }
 
     /**
@@ -610,6 +613,7 @@ class Module extends Base
         }
         ModuleModel::where('id', $id)->update($sqlmap);
         ConfigModel::getConfigs('', true);
+        Cache::tag('module_tag')->clear();
         if (!$moduleObj->installAfter()) {
             return '模块安装后的方法执行失败（原因：' . $moduleObj->getError . '）';
         }
@@ -791,7 +795,6 @@ class Module extends Base
             if (!$model->del($mod['name'], 1)) {
                 return $this->response(0,'模块配置信息删除失败');
             }
-            ConfigModel::getConfigs('', true);
             //删除语言数据
             $res = LangModel::langClear($mod['name']);
             if($res){
@@ -801,6 +804,7 @@ class Module extends Base
             //更新缓存
             Cache::tag('menus')->clear();
             Cache::tag('module_tag')->clear();
+            Cache::tag('hiphp_config')->clear();
             if (!$moduleObj->uninstallAfter()) {
                 return '模块卸载后的方法执行失败（原因：' . $moduleObj->getError . '）';
             }
@@ -876,7 +880,8 @@ class Module extends Base
             ModuleModel::where('id', $id)->update(['default'=>0]);
         }
         Cache::tag('module_tag')->clear();
-        return $this->response(1,'操作成功');
+
+        return $this->response(1,'操作成功', $this->rstr);
     }
 
     /**
@@ -901,11 +906,7 @@ class Module extends Base
         }
         Cache::tag('module_tag')->clear();
 
-        $tmparr = parse_url($_SERVER["HTTP_REFERER"]);
-        $rstr = empty($tmparr['scheme']) ? 'http://' : $tmparr['scheme'] . '://';
-        $rstr .= $tmparr['host'] . $tmparr['path'];
-
-        return $this->response(1,'操作成功', $rstr);
+        return $this->response(1,'操作成功', $this->rstr);
     }
 
     /**

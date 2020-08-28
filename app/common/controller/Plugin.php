@@ -180,12 +180,12 @@ abstract class Plugin
      * @param array $header 发送的Header信息
      * @return void
      */
-    protected function response($type = 1, $msg = '', string $url = null, $data = '', int $wait = 3, array $header = [])
+    protected function response(int $type = 1, string $msg = '', string $url = '', $data = '', int $wait = 3, array $header = [])
     {
         if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
             $url = $_SERVER["HTTP_REFERER"];
-        } elseif ($url) {
-            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : app()->route->buildUrl($url);
+        } else if ($url) {
+            $url = (strpos($url, '://') || 0 === strpos($url, '/')) ? $url : $this->app->route->buildUrl($url);
         }
         $result = [
             'code' => $type ?: 0,
@@ -195,12 +195,9 @@ abstract class Plugin
             'wait' => $wait,
         ];
         $type = $this->getResponseType();
-        if ('html' == strtolower($type)) {
-            $type = 'view';
-        }
-        switch ($type) {
-            case 'view':
-                $response = Response::create(app()->config->get('app.dispatch_success_tmpl'), $type)->header($header)->assign($result);
+        switch (strtolower($type)) {
+            case 'html':
+                $response = Response::create(app()->config->get('app.dispatch_success_tmpl'), 'view', 200)->header($header)->assign($result);
                 break;
             case 'json':
                 $response = Response::create($result, $type, 200)->header($header);

@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="__PUBLIC_PACK__/layui/css/layui.css?v={:config('builder.version')}" media="all">
 <link rel="stylesheet" href="__PUBLIC_STATIC__/p_builder/css/table.css?v={:config('builder.version')}">
 <script src="__PUBLIC_PACK__/layui/layui.js?v={:config('builder.version')}"></script>
+<style>{if isset($cssCode)}{$cssCode}{/if}</style>
 <script>
     layui.use(['element', 'form'], function() {
         var element = layui.element;
@@ -97,25 +98,17 @@
 {switch name="vo['type']"}
 {case value="switch"}
 <script type="text/html" id="{:str_replace('#','',$vo['templet'])}">
-    {if isset($vo.style)}
-    <style>
-        {$vo.style}
-    </style>
-    {/if}
-    <input type="checkbox" name="{$vo['field']}" value="{{d.id}}" lay-text="{$vo['operate']['text']}" data-href="{if isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$vo['operate']['url']}&v={{d.status==1?0:1}}&id={{d.id}}{else/}{$vo['operate']['url']}?v={{d.status==1?0:1}}&id={{d.id}}{/if}" lay-skin="switch" lay-filter="{$vo['operate']['filter']}" {{ d.status == 1 ? 'checked' : '' }}>
+    {if isset($vo.style)}<style>{$vo.style}</style>{/if}
+    <input type="checkbox" name="{$vo['field']}" value="{{d.{$vo['field']}}}" lay-text="{$vo['operate']['text']}" data-href="{if isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$vo['operate']['url']}&v={{d.{$vo['field']}==1?0:1}}&id={{d.id}}{else/}{$vo['operate']['url']}?v={{d.{$vo['field']}==1?0:1}}&id={{d.id}}{/if}" lay-skin="switch" lay-filter="{$vo['operate']['filter']}" {{ d.{$vo['field']} == 1 ? 'checked' : '' }}>
 </script>
 {/case}
 {case value="button"}
 <script type="text/html" id="{:str_replace('#','',$vo['templet'])}">
-    {if isset($vo.style)}
-    <style>
-        {$vo.style}
-    </style>
-    {/if}
+    {if isset($vo.style)}<style>{$vo.style}</style>{/if}
     {if isset($vo['operate']) && $vo['operate']}
     <div>
         {volist name="$vo['operate']" id="v"}
-        <a href="{if isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$v.url}{else/}{$v.url}{/if}" class="layui-btn layui-btn-xs {$v.class != ''?$v.class:''}">{$v.text}</a>
+        {if isset($vo.depend_html)}{$vo.depend_html}{/if}<a href="{if isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$v.url}{else/}{$v.url}{/if}" class="layui-btn layui-btn-xs {$v.class ?? ''}{$v.ajax? ' hi-ajax':''}"{if isset($v.data)} hi-data={:json_encode($v.data)}{/if}{if isset($v.style)} style="{$v.style}"{/if}{if isset($v.attribute)}{$v.attribute}{/if}{$v.confirm? ' confirm="'.$v.confirm.'"':''}>{$v.text}</a>
         {/volist}
     </div>
     {/if}
@@ -153,7 +146,7 @@
                 cols[key].templet = eval('('+cols[key].templet+')');
             }
         }
-        var options = {elem: '#dataTable', id:'dataTable', url: '{if isset($_GET["_p"])}{:url()}?_p={$_GET["_p"]}&_c={$_GET["_c"]}&_a={$_GET["_a"]}{else/}{:url()}{/if}',skin: 'row',even: true,text: {none : '暂无相关数据'},cols:[cols],page: true};
+        var options = {elem: '#dataTable', id:'dataTable', url: '{if isset($_GET["_p"])}{:url()}?_p={$_GET["_p"]}&_c={$_GET["_c"]}&_a={$_GET["_a"]}{else/}'+window.location.href+'{/if}',skin: 'row',even: true,text: {none : '暂无相关数据'},cols:[cols],page: true};
         if(buildData.buildTable.hasOwnProperty("toolbar")){
             options.toolbar = '#toolbar'
         }
@@ -164,10 +157,9 @@
                 ,trigger: 'click'
             });
         });
-
     });
 </script>
-
+<script type="text/javascript">{if isset($jsCode)}{$jsCode}{/if}</script>
 {/if}
 </body>
 </html>

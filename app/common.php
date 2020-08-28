@@ -558,13 +558,15 @@ if (!function_exists('randomStr')) {
     /**
      * 生成随机字符串，数字，大小写字母随机组合
      * @param int $length  长度
-     * @param int $type    类型，1 纯数字，2 纯小写字母，3 纯大写字母，4 数字和小写字母，5 数字和大写字母，6 大小写字母，7 数字和大小写字母
+     * @param int $type    类型，1 纯数字，2 纯小写字母，3 纯大写字母，4 数字和小写字母，5 数字和大写字母，6 大小写字母，7 数字和大小写字母, 8 数字和大小写字母以及特殊字符
+     * @param int $special 特殊字符,用逗号隔开,格式如 $special = '$,_,-,~';
      */
-    function randomStr(int $length = 6, int $type = 1)
+    function randomStr(int $length = 6, int $type = 1, $special = null)
     {
         $number = range(0, 9);
         $lowerLetter = range('a', 'z');
         $upperLetter = range('A', 'Z');
+        $special = null !== $special ? explode(',', $special) : ['_','-','$','.'];
         if ($type == 1) {
             $charset = $number;
         } elseif ($type == 2) {
@@ -579,7 +581,9 @@ if (!function_exists('randomStr')) {
             $charset = array_merge($lowerLetter, $upperLetter);
         } elseif ($type == 7) {
             $charset = array_merge($number, $lowerLetter, $upperLetter);
-        } else {
+        } elseif ($type == 8) {
+            $charset = array_merge($number, $lowerLetter, $upperLetter, $special);
+        }else {
             $charset = $number;
         }
         $str = '';
@@ -609,10 +613,20 @@ if (!function_exists('randomStr')) {
                     $i = $i - 2;
                 }
             }
+            if ($type == 8 && strlen($str) >= 4) {
+                $specialStr = '';
+                foreach ($special as $v){
+                    $specialStr .= '\\'.$v.'|';
+                }
+                if (!preg_match('/'.rtrim($specialStr, '|').'/', $str) || !preg_match('/\d+/', $str) || !preg_match('/[a-z]+/', $str) || !preg_match('/[A-Z]+/', $str)) {
+                    $str = substr($str, 0, -3);
+                    $i = $i - 3;
+                }
+            }
+
         }
         return $str;
     }
 }
-
 
 /****************************通用便捷函数END********************************/

@@ -64,7 +64,7 @@ layui.define(["element", "jquery"], function (exports) {
         this.initDevice = function () {
             if (layuihi.checkMobile()) {
                 $('.layuihi-tool i').attr('data-side-fold', 0);
-                $('.layuihi-tool i').attr('class', 'fa fa-indent');
+                $('.layuihi-tool i').attr('class', 'icon iconfont iconmenuopen');
                 $('.layui-layout-body').attr('class', 'layui-layout-body layuihi-hi');
             }
         };
@@ -872,11 +872,11 @@ layui.define(["element", "jquery"], function (exports) {
         var isShow = $(this).attr('data-side-fold');
         if (isShow == 1) { // 缩放
             $(this).attr('data-side-fold', 0);
-            $('.layuihi-tool i').attr('class', 'fa fa-indent');
+            $('.layuihi-tool i').attr('class', 'icon iconfont iconmenuopen');
             $('.layui-layout-body').attr('class', 'layui-layout-body layuihi-hi');
         } else { // 正常
             $(this).attr('data-side-fold', 1);
-            $('.layuihi-tool i').attr('class', 'fa fa-outdent');
+            $('.layuihi-tool i').attr('class', 'icon iconfont iconmenuclose');
             $('.layui-layout-body').attr('class', 'layui-layout-body layuihi-all');
         }
         layuihi.tabRoll();
