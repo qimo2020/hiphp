@@ -1,0 +1,106 @@
+<link rel="stylesheet" href="__MODULE_STATIC__/css/color.css?v={:config('hiphp.version')}">
+<style>
+    .table-box{
+        background-color: #fff;
+        overflow: hidden;
+        padding:20px;
+    }
+    .theme,.mobile-theme{
+        overflow: hidden;
+    }
+    .layui-btn-group a{
+        margin-right:8px !important;
+    }
+    .layui-btn-group .layui-btn{
+        margin-right:8px !important;
+    }
+    .hi-module-item{padding:0 0 20px 0;}
+    .reback{
+        padding:10px 0;
+        overflow: hidden;
+    }
+</style>
+<div class="table-box">
+    <div class="layui-form-item">
+        <div class="site-title">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>电脑端主题</legend>
+            </fieldset>
+        </div>
+    </div>
+    <div class="theme">
+        {volist name="themes" id="vo"}
+        <div class="layui-col-md2 hi-module-item">
+            <img src="{$vo['thumb']}" width="150" height="150">
+            <dl>
+                <dd>名称：<span class="mcolor">{$vo['title']}</span></dd>
+                <dd>作者：<span class="mcolor2">{$vo['author']}</span></dd>
+                <dd>版本：<span class="mcolor2">{$vo['version']}</span></dd>
+                <dd>时间：<span class="mcolor2">{$vo['time']}</span></dd>
+                <dt>
+                    <div class="layui-btn-group">
+                        {if ($vo['name'] == $formData['theme'])}
+                        <a class="layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled">默认</a>
+                        {if ($vo['sql'])}
+                        <a data-href="{:url('exeSql?app_name='.$formData['name'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-xs layui-btn-warm hi-ajax" confirm="此操作可能会清空当前主题下的所有数据<br>请提前做好备份工作。切记！切记！">导入SQL</a>
+                        {/if}
+                        {else /}
+                        <a data-href="{:url('setDefaultTheme?id='.$formData['id'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-xs layui-btn-normal hi-ajax">设为默认</a>
+                        {if ($vo['sql'])}
+                        <a data-href="{:url('exeSql?app_name='.$formData['name'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-xs layui-btn-warm hi-ajax" confirm="此操作可能会清空当前模块下的所有数据<br>请提前做好备份工作。切记！切记！">导入SQL</a>
+                        {/if}
+                        {/if}
+                        {if (isset($vo['identifier']) && !empty($vo['identifier']))}
+                        <a href="{:url('upgrade/lists?app_name='.$formData['name'].'&app_type=theme&app_version='.$vo['version'].'&identifier='.$vo['identifier'])}" class="layui-btn layui-btn-normal layui-btn-xs">更新</a>
+                        {/if}
+                        <a data-href="{:url('delTheme?id='.$formData['id'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-danger layui-btn-xs hi-ajax" title="删除之后将无法恢复！您确定要执行删除吗？">删除</a>
+                    </div>
+                </dt>
+            </dl>
+        </div>
+        {/volist}
+    </div>
+    <div class="layui-form-item">
+        <div class="site-title">
+            <fieldset class="layui-elem-field layui-field-title">
+                <legend>手机端主题</legend>
+            </fieldset>
+        </div>
+    </div>
+    <div class="mobile-theme">
+        {volist name="themesMobile" id="vo"}
+        <div class="layui-col-md2 hi-module-item">
+            <img src="{$vo['thumb']}" width="150" height="150">
+            <dl>
+                <dd>名称：<span class="mcolor">{$vo['title']}</span></dd>
+                <dd>作者：<span class="mcolor2">{$vo['author']}</span></dd>
+                <dd>版本：<span class="mcolor2">{$vo['version']}</span></dd>
+                <dd>时间：<span class="mcolor2">{$vo['time']}</span></dd>
+                <dt>
+                    <div class="layui-btn-group">
+                        {if ($vo['name'] == $formData['mobile_theme'])}
+                        <a class="layui-btn layui-btn-primary layui-btn-xs layui-btn-disabled">默认</a>
+                        {if ($vo['sql'])}
+                        <a data-href="{:url('exeSql?app_name='.$formData['name'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-xs layui-btn-warm hi-ajax" confirm="此操作可能会清空当前主题下的所有数据<br>请提前做好备份工作。切记！切记！">导入SQL</a>
+                        {/if}
+                        {else /}
+                        <a data-href="{:url('setDefaultTheme?id='.$formData['id'].'&theme='.$vo['name'].'&mobile=1')}" class="layui-btn layui-btn-xs layui-btn-normal hi-ajax">设为默认</a>
+                        {if ($vo['sql'])}
+                        <a data-href="{:url('exeSql?app_name='.$formData['name'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-xs layui-btn-warm hi-ajax" confirm="此操作可能会清空当前模块下的所有数据<br>请提前做好备份工作。切记！切记！">导入SQL</a>
+                        {/if}
+                        {/if}
+                        {if (isset($vo['identifier']) && !empty($vo['identifier']))}
+                        <a href="{:url('upgrade/lists?app_name='.$formData['name'].'&app_type=theme&app_version='.$vo['version'].'&identifier='.$vo['identifier'])}" class="layui-btn layui-btn-normal layui-btn-xs">更新</a>
+                        {/if}
+                        <a data-href="{:url('delTheme?id='.$formData['id'].'&theme='.$vo['name'])}" class="layui-btn layui-btn-danger layui-btn-xs hi-ajax" title="删除之后将无法恢复！您确定要执行删除吗？">删除</a>
+                    </div>
+                </dt>
+            </dl>
+        </div>
+        {/volist}
+    </div>
+    <div class="layui-card-header reback">
+        <a href="{:url('index')}" class="layui-btn layui-btn-normal hi-btn">返回</a>
+    </div>
+</div>
+{include file="block/layui" /}

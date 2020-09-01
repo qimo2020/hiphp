@@ -1,0 +1,130 @@
+.fl{float:left;}
+.fr{float:right}
+
+.table-box{
+    padding:15px;
+    background-color: #fff;
+}
+.table-box2{
+    background-color: #fff;
+    padding-top:10px;
+}
+.layui-form{
+    border-width: 0;
+}
+.layui-table-header{
+    border-width: 0 1px 1px 1px;
+}
+.layui-table-body{
+    margin-right: 0;
+    border-width:0 1px 0 1px;
+    padding-bottom:5px;
+}
+.layui-table-view .layui-table td:first-child{
+    border-left:1px solid #e6e6e6;
+}
+.layui-table-view{
+    margin:0;
+}
+.layui-table-tool{
+    background-color: #fff;
+    padding:0;
+    min-height:45px;
+}
+.layui-table-tool-self{
+    top:0;
+}
+.hi-table-tool .layui-btn{
+    padding: 0px 15px;
+}
+.searchTable .layui-btn+.layui-btn{
+    margin-left: 5px;
+}
+
+.layui-table-page{
+    padding-top:15px;
+    padding-bottom:15px;
+    height: 50px;
+    border-width: 0;
+}
+.layui-badge{
+    height:20px;
+    line-height: 20px;
+}
+.layui-table-cell{
+    height:auto;
+    overflow:visible;
+    text-overflow:inherit;
+    white-space:normal;
+}
+.layui-table-cell a.layui-btn{
+    margin-left:5px !important;
+}
+.layui-table[lay-even] tr{
+    border-bottom:1px solid #e6e6e6;
+}
+.layui-table[lay-even] tr:nth-child(2n){
+    background-color: #fff;
+
+}
+.layui-table[lay-even] tr:nth-child(2n):hover{
+    background-color: #f2f2f2;
+}
+/*数据表格筛选*/
+.layui-collapse{
+    margin-bottom:10px;
+}
+.layui-collapse .layui-colla-content{
+    padding-bottom:0;
+}
+.layui-collapse ul{
+}
+.layui-collapse ul li{
+   display: inline-block;
+    margin-bottom:10px;
+    margin-right: 5px;
+}
+.layui-collapse .layui-colla-title{
+    height:32px;
+    line-height: 32px;
+    padding-left:30px;
+    font-size:13px;
+    background-color: #f2f2f2 !important;
+}
+.layui-collapse .layui-colla-title .layui-colla-icon{
+    left: 10px;
+}
+.searchTable{
+
+}
+.searchTable .layui-form-select dl{
+    top:30px;
+}
+.searchTable .layui-inline{
+    margin-right:8px;
+}
+.searchTable .only{
+    margin-right:15px;
+}
+.searchTable .layui-btn {
+    height:30px;
+    line-height: 30px;
+}
+.layui-table-tool{
+    background-color: #fff;
+}
+.layui-table-view .layui-form-checkbox i{
+    height:34px;
+}
+.layui-table-view .layui-form-checkbox{
+    height:32px;
+    line-height:32px;
+}
+.searchTable .layui-input, .searchTable .layui-select{
+    height:30px;
+    line-height: 30px;
+}
+#searchBtn{margin-left:10px;}
+
+.layui-table-cell a.hide{display: none;}
+/*数据表格筛选end*/

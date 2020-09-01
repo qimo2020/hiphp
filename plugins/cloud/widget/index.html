@@ -1,0 +1,234 @@
+<style>
+    #cloudForm .red{color:#E33E33}
+</style>
+{php}
+$params = request()->param();
+$method = !isset($params['status']) || $params['status'] == 3 ? 'upgrade' : 'download';
+$type = strtolower(request()->controller());
+{/php}
+<script>
+    layui.use(['table', 'jquery', 'layer', 'md5'], function() {
+        var $ = layui.jquery, layer = layui.layer, sid = '{if isset($requests)}{$requests["sid"]}{/if}',token = '{if isset($requests)}{$requests["token"]}{/if}', clientIp = '{:getClientIp()}', md5 = layui.md5;
+        var params = JSON.parse('{:urldecode(json_encode($requests))}');
+        var checkConnect = function(){
+            let promise = new Promise(function (resolve, reject) {
+                if(!token){
+                    resolve({'code':0});
+                    return this;
+                }
+                params.version = '{:config("hiphp.version")}';
+                $.ajax({
+                    url:'{$data["apiUrl"]}connect',
+                    type: 'post',
+                    dataType: 'json',
+                    data: params,
+                    error: function(){
+                        if($('.connect-tips')){
+                            $('.connect-tips').html('<span style="color:red">通信异常</span>');
+                        }
+                        reject(res);
+                    },
+                    success:function(res) {
+                        if($('.system-upgrade-tips') && res.version && res.version != '{:config("hiphp.version")}'){
+                            $('.upgrade-btn').show();
+                        }
+                        if($('.system-upgrade-binds') && res.bind){
+                            $('.system-upgrade-binds').children('.bind-tips').text('已绑定').removeClass('red').siblings('.bind-btn').remove();
+                        }
+                        resolve(res);
+                    }
+                });
+            })
+            return promise;
+        }
+        checkConnect().then(function (res) {
+            if(res.code == 0 || !res.bind){
+                bindCloud();
+            }
+        }).catch(function (e) {
+            layer.msg('通讯失败，请检查站点部署是否正常!',{time:3000});
+        });
+        var bindCloud = function () {
+            layer.open({
+                title: '<a href="{:config("clouds.store_push_domain")}custom/domain" target="_blank" class="mcolor">绑定应用中心</a>',
+                id: 'popLoginBox',
+                area: '380px',
+                content: $('#cloudBind').html(),
+                btn: ['确认绑定', '取消'],
+                btnAlign: 'c',
+                move: false,
+                yes: function (index) {
+                    var tips = $('#resultTips'), pwd = $('input[name="password"]').val();
+                    if(!pwd){
+                        tips.addClass('red').html('请填写完整！');
+                        return false;
+                    }
+                    tips.html('请稍后，云平台通信中...');
+                    $.post('/plugin.php?s=cloud/upgrade/bind', {password: md5.exec(pwd)}, function (res) {
+                        if (res.code == 1) {
+                            layer.msg(res.msg);
+                            setTimeout(function () {
+                                location.reload();
+                            }, 3000);
+                        } else {
+                            tips.addClass('red').html(res.msg);
+                            setTimeout(function () {
+                                tips.removeClass('red').html('');
+                            }, 3000);
+                        }
+                    });
+                    return false;
+                },
+                success: function () {
+                    $('#cloudForm .layui-word-aux').html('温馨提示：您需要登录云平台后才能下载和升级应用');
+                }
+            });
+        }
+
+        if($(".site-download-active")) {
+            var close = false;
+            $(document).on('click', '.site-download-active', function () {
+                layer.msg('准备下载，请勿关闭窗口');
+                var params = $(this).attr('uri-params');
+                prepare(params).then(function(){
+                    return start(params);
+                }).catch(function(err){
+                    layer.msg(`${err}`);
+                });
+            })
+            var prepare = function(params){
+                let promise = new Promise(function (resolve, reject) {
+                    setTimeout(function () {
+                        $.ajax({
+                            url:"/plugin/cloud/upgrade/download?"+params,
+                            data:{'method':'prepare'},
+                            type:"post",
+                            dataType:"json",
+                            success:function(res){
+                                if(res.code == 1){
+                                    resolve(res);
+                                }else{
+                                    layer.msg('通信校验码已过期，请重新绑定');
+                                    reject(res.msg);
+                                }
+                            },
+                            error:function(res){
+                                reject(res);
+                            }
+                        });
+                    },1000)
+                })
+                return promise;
+            }
+            var start = function(params){
+                let promise = new Promise(function (resolve, reject) {
+                    setTimeout(function () {
+                        layer.msg('<div class="down-tips">下载中，请耐心等待...</div>',{'time':1000000000});
+                        check_progress(params);
+                        $.ajax({
+                            url:"/plugin/cloud/upgrade/download?"+params,
+                            data:{'method':'start'},
+                            type:"post",
+                            dataType:"json",
+                            success:function(res){
+                                if(res.code == 1){
+                                    setTimeout(function () {
+                                        appImport(params, res.data.temp_path);
+                                    }, 200);
+                                    resolve(res);
+                                }else{
+                                    layer.msg(res.msg);
+                                    reject(res);
+                                }
+                                close = true;
+                            },
+                            error:function(err){
+                                console.log(err);
+                            }
+                        });
+                    }, 1000);
+                })
+                return promise;
+            }
+            var check_progress = function(params){
+                var timer = setInterval(function () {
+                    if(close == true){
+                        clearTimeout(timer);
+                        $('.down-tips').html('恭喜，已下载完成，请手动执行安装操作');
+                        return false;
+                    }
+                    $.ajax({
+                        url:"/plugin/cloud/upgrade/download?"+params,
+                        data:{'method':'progress'},
+                        type:"post",
+                        dataType:"json",
+                        success:function(res){
+                            let strs = params.split("&"), paramsArr = new Object();
+                            for(var i=0;i<strs.length;i++)
+                            {
+                                var sTemp = strs[i].split("=");
+                                paramsArr[sTemp[0]]=(sTemp[1]);
+                            }
+                            if(res.code == 1){
+                                if(typeof res.data.file_size != 'undefined' && res.data.file_size > 0){
+                                    let precent = Math.round(parseFloat(res.data.file_size) / parseFloat(paramsArr.size) * 10000) / 100.00, tips = '';
+                                    if(precent >= 100){
+                                        precent = 100;
+                                    }
+                                    $('.down-tips').html('下载中，请勿关闭下载窗口，进度 <span class="download-progress">'+precent+'%</span>');
+                                }
+                            }else{
+                                clearTimeout(timer);
+                            }
+                        },
+                        error:function(data){
+                            clearTimeout(timer);
+                        }
+                    });
+                }, 500);
+            }
+            var appImport = function(params, url){
+                $.ajax({
+                    url:"/plugin/cloud/upgrade/import?"+params,
+                    data:{'file':url},
+                    type:"post",
+                    dataType:"json",
+                    success:function(res){
+                        layer.msg(res.msg);
+                        if(res.code == 1){
+                            setTimeout(function () {
+                                location.reload();
+                            },1500)
+                        }
+                    },
+                    error:function(err){
+                        layer.msg(`${err}`);
+                    }
+                });
+            }
+        }
+
+        if($('.bind-btn')){
+            $(document).on('click', '.bind-btn', function () {
+                bindCloud();
+            })
+        }
+
+    })
+</script>
+<script type="text/html" id="cloudBind">
+    <form class="layui-form layui-form-pane page-form" action="" method="post" id="cloudForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">安全码</label>
+            <div class="layui-input-inline w200">
+                <input type="password" class="layui-input" name="password" lay-verify="required" autocomplete="off" placeholder="请输入应用中心网站安全码">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-mid layui-word-aux" style="padding:0!important;">
+                温馨提示：确认绑定，表示您已了解并同意<a href="#" class="mcolor2">应用中心相关协议</a>
+            </div>
+        </div>
+        <div class="layui-form-item" id="resultTips"></div>
+    </form>
+</script>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<head>
+{if isset($buildData)}
+<link rel="stylesheet" href="__PUBLIC_PACK__/layui/css/layui.css?v={:config('builder.version')}" media="all">
+<link rel="stylesheet" href="__PUBLIC_STATIC__/p_builder/css/table.css?v={:config('builder.version')}">
+<script src="__PUBLIC_PACK__/layui/layui.js?v={:config('builder.version')}"></script>
+<style>{if isset($cssCode)}{$cssCode}{/if}</style>
+<script>
+    layui.use(['element', 'form'], function() {
+        var element = layui.element;
+        var form = layui.form;
+    });
+    layui.config({
+        base: '__PUBLIC_PACK__/layui_admin/',
+        version: '{:config("builder.version")}'
+    }).extend({
+        layuihi: "layuihi",
+        base: "base",
+        func: "func",
+        md5: "md5",
+    }).use(['base']);
+</script>
+</head>
+<body>
+{if !isset($tabType) || !$tabType}
+<div class="table-box">
+{/if}
+{if isset($buildData['buildTable']['filter']['items'])}
+<style>.layui-table-tool{min-height:42px;}</style>
+    <div class="layui-collapse">
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">筛选条件</h2>
+            <div class="layui-colla-content layui-show">
+                <form class="layui-form" lay-filter="searchForm" action="{if isset($buildData['buildTable']['filter']['url'])}{$buildData['buildTable']['filter']['url']}{else/}{:url()}{/if}">
+                    <div class="searchTable">
+                        <ul>
+                            {volist name="buildData.buildTable.filter.items" id="v"}
+                            {switch name="v['type']"}
+                            {case value="text"}
+                            <li>
+                                <span class="title">{$v['title']}:</span>
+                                <div class="layui-inline">
+                                    <input class="{if isset($v['class'])}{$v['class']} {/if}layui-input" name="{$v['name']}" autocomplete="off"{if isset($v['filter'])} lay-filter="{$v['filter']}"{/if} style="{if isset($v['width'])}width: {$v['width']}{/if}px;">
+                                </div>
+                            </li>
+                            {/case}
+                            {case value="select"}
+                            <li>
+                                <span class="title">{$v['title']}:</span>
+                                <div class="layui-inline" style="{if isset($v['width'])}width: {$v['width']}{/if}px;">
+                                    <select class="layui-select" name="{$v['name']}"{if isset($v['filter'])} lay-filter="{$v['filter']}"{/if}>
+                                        <option value="0">全部</option>
+                                        {foreach $v['option'] as $key=>$vo}
+                                        <option value="{$key}">{$vo}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </li>
+                            {/case}
+                            {case value="date"}
+                            <li>
+                                <span class="title">{$v['title']}:</span>
+                                <div class="layui-inline">
+                                    <input class="{if isset($v['class'])}{$v['class']} {/if}layui-input layui-date" name="{$v['name']}" autocomplete="off"{if isset($v['filter'])} lay-filter="{$v['filter']}"{/if} style="{if isset($v['width'])}width: {$v['width']}{/if}px;">
+                                </div>
+                            </li>
+                            {/case}
+                            {/switch}
+                            {/volist}
+                            <li>
+                            <button class="layui-btn layui-btn-normal hi-table-search">查询</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{/if}
+<table id="dataTable" lay-filter="build-table"></table>
+{if !isset($tabType) || !$tabType}
+</div>
+{/if}
+{if isset($buildData['buildTable']['toolbar'])}
+<script type="text/html" id="toolbar">
+    <div class="hi-table-tool">
+        {volist name="buildData.buildTable.toolbar" id="vo"}
+        <a href="{if strpos($vo['url'], 'http') !== false}{$vo['url']}{elseif isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$vo['url']}{else/}{:url($vo['url'])}{/if}" class="{$vo['class']}" title="{$vo['title']}"{if isset($vo.data)} hi-data={:json_encode($vo.data)}{/if}>&nbsp;{$vo['title']}</a>
+        {/volist}
+    </div>
+</script>
+{/if}
+
+{if isset($buildData['buildTable']['config']) && isset($buildData['buildTable']['config']['cols'])}
+{volist name="buildData.buildTable.config.cols" id="vo"}
+{if isset($vo['templet']) && isset($vo['operate'])}
+{switch name="vo['type']"}
+{case value="switch"}
+<script type="text/html" id="{:str_replace('#','',$vo['templet'])}">
+    {if isset($vo.style)}<style>{$vo.style}</style>{/if}
+    <input type="checkbox" name="{$vo['field']}" value="{{d.{$vo['field']}}}" lay-text="{$vo['operate']['text']}" data-href="{if isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$vo['operate']['url']}&v={{d.{$vo['field']}==1?0:1}}&id={{d.id}}{else/}{$vo['operate']['url']}?v={{d.{$vo['field']}==1?0:1}}&id={{d.id}}{/if}" lay-skin="switch" lay-filter="{$vo['operate']['filter']}" {{ d.{$vo['field']} == 1 ? 'checked' : '' }}>
+</script>
+{/case}
+{case value="button"}
+<script type="text/html" id="{:str_replace('#','',$vo['templet'])}">
+    {if isset($vo.style)}<style>{$vo.style}</style>{/if}
+    {if isset($vo['operate']) && $vo['operate']}
+    <div>
+        {volist name="$vo['operate']" id="v"}
+        {if isset($vo.depend_html)}{$vo.depend_html}{/if}<a href="{if isset($_GET['_p'])}{:url()}?_p={$_GET['_p']}&_c={$_GET['_c']}&{$v.url}{else/}{$v.url}{/if}" class="layui-btn layui-btn-xs {$v.class ?? ''}{$v.ajax? ' hi-ajax':''}"{if isset($v.data)} hi-data={:json_encode($v.data)}{/if}{if isset($v.style)} style="{$v.style}"{/if}{if isset($v.attribute)}{$v.attribute}{/if}{$v.confirm? ' confirm="'.$v.confirm.'"':''}>{$v.text}</a>
+        {/volist}
+    </div>
+    {/if}
+</script>
+{/case}
+{case value="text"}
+<script type="text/html" id="{:str_replace('#','',$vo['templet'])}">
+    {if isset($vo.style)}
+    <style>
+        {$vo.style}
+    </style>
+    {/if}
+    {if isset($vo['operate']) && $vo['operate']}
+    <div>
+        {volist name="$vo['operate']" id="v"}
+        {:htmlspecialchars_decode($v.text)}
+        {/volist}
+    </div>
+    {/if}
+</script>
+{/case}
+{/switch}
+{/if}
+{/volist}
+{/if}
+
+<script type="text/javascript">
+    layui.use(['table', 'jquery', 'laydate'], function() {
+        var $ = layui.jquery, table = layui.table, laydate = layui.laydate;
+        var buildData = {:json_encode(json_encode($buildData))};
+        buildData = eval('('+buildData+')');
+        var cols = buildData.buildTable.config.cols;
+        for(var key in cols) {
+            if(cols[key].templet && cols[key].templet.indexOf("#") < 0){
+                cols[key].templet = eval('('+cols[key].templet+')');
+            }
+        }
+        var options = {elem: '#dataTable', id:'dataTable', url: '{if isset($_GET["_p"])}{:url()}?_p={$_GET["_p"]}&_c={$_GET["_c"]}&_a={$_GET["_a"]}{else/}'+window.location.href+'{/if}',skin: 'row',even: true,text: {none : '暂无相关数据'},cols:[cols],page: true};
+        if(buildData.buildTable.hasOwnProperty("toolbar")){
+            options.toolbar = '#toolbar'
+        }
+        table.render(options);
+        $('.layui-date').each(function(i) {
+            laydate.render({
+                elem: this
+                ,trigger: 'click'
+            });
+        });
+    });
+</script>
+<script type="text/javascript">{if isset($jsCode)}{$jsCode}{/if}</script>
+{/if}
+</body>
+</html>
