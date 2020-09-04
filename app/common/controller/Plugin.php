@@ -180,7 +180,7 @@ abstract class Plugin
      * @param array $header 发送的Header信息
      * @return void
      */
-    protected function response(int $type = 1, string $msg = '', string $url = '', $data = '', int $wait = 3, array $header = [])
+    protected function response(int $type = 1, $msg = '', string $url = '', $data = '', int $wait = 3, array $header = [])
     {
         if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
             $url = $_SERVER["HTTP_REFERER"];
@@ -198,6 +198,7 @@ abstract class Plugin
         switch (strtolower($type)) {
             case 'html':
                 $response = Response::create(app()->config->get('app.dispatch_success_tmpl'), 'view', 200)->header($header)->assign($result);
+                $response = view($this->app->config->get('app.dispatch_success_tmpl'), $result);
                 break;
             case 'json':
                 $response = Response::create($result, $type, 200)->header($header);

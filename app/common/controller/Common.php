@@ -242,7 +242,7 @@ class Common extends BaseController
      * @param array $header 发送的Header信息
      * @return void
      */
-    protected function response(int $type = 1, string $msg = '', string $url = '', $data = '', int $wait = 3, array $header = [])
+    protected function response(int $type = 1, $msg = '', string $url = '', $data = '', int $wait = 3, array $header = [])
     {
         if (is_null($url) && isset($_SERVER["HTTP_REFERER"])) {
             $url = $_SERVER["HTTP_REFERER"];
