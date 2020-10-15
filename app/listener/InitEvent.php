@@ -18,7 +18,7 @@ class InitEvent
 {
     public function handle()
     {
-        $pathInfo = Request::instance()->pathinfo();
+        $pathInfo = pathInfoParse();
         //入口标识
         define('IN_SYSTEM', true);
         // 获取站点根目录
@@ -60,7 +60,8 @@ class InitEvent
         }
         //默认模块
         $bind = Route::getBind();
-        if(!defined('ADMIN_ENTRANCE') && !defined('PLUGIN_ENTRANCE') && !$bind){
+        $request = \request();
+        if(($request->domain() == $request->scheme() . '://' . config('base.site_domain')) && !defined('ADMIN_ENTRANCE') && !defined('PLUGIN_ENTRANCE') && !$bind){
             $pathInfo = array_filter(explode('/', (string)$pathInfo));
             if (empty($pathInfo) || !in_array($pathInfo[0], array_column(ModuleModel::getModules(), 'name'))) {
                 if(ModuleModel::getDefaultModule()){
@@ -69,6 +70,7 @@ class InitEvent
                 }
             }
         }
+
         //域名绑定应用
         $moduleBinds = $configs['system']['domain_binds'];
         if(is_array($moduleBinds) && !empty($moduleBinds)){

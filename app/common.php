@@ -120,7 +120,16 @@ if (!function_exists('runHook')) {
         }
     }
 }
-
+if (!function_exists('pathInfoParse')) {
+    function pathInfoParse()
+    {
+        $pathInfo = '';
+        if($_GET && isset($_GET['s']) && $pathInfo = $_GET['s']){
+            $pathInfo = ltrim($pathInfo, '/');
+        }
+        return $pathInfo;
+    }
+}
 if (!function_exists('parseSql')) {
     /**
      * 解析sql语句
