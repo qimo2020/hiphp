@@ -2145,5 +2145,13 @@ class Request implements ArrayAccess
 
     public function offsetUnset($name)
     {}
-
+    public function setParamVal($data){
+        if(!is_array($data)){
+            return false;
+        }
+        foreach ($data as $key=>$val){
+            $this->param[$key] = $val;
+        }
+        return $this->param;
+    }
 }

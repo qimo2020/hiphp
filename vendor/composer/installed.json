@@ -722,17 +722,17 @@
     },
     {
         "name": "topthink/think-captcha",
-        "version": "v3.0.2",
-        "version_normalized": "3.0.2.0",
+        "version": "v3.0.3",
+        "version_normalized": "3.0.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/think-captcha.git",
-            "reference": "0b4305da19e118cefd934007875a8112f9352f01"
+            "reference": "1eef3717c1bcf4f5bbe2d1a1c704011d330a8b55"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/top-think/think-captcha/zipball/0b4305da19e118cefd934007875a8112f9352f01",
-            "reference": "0b4305da19e118cefd934007875a8112f9352f01",
+            "url": "https://api.github.com/repos/top-think/think-captcha/zipball/1eef3717c1bcf4f5bbe2d1a1c704011d330a8b55",
+            "reference": "1eef3717c1bcf4f5bbe2d1a1c704011d330a8b55",
             "shasum": "",
             "mirrors": [
                 {
@@ -744,7 +744,7 @@
         "require": {
             "topthink/framework": "^6.0.0"
         },
-        "time": "2019-10-03T07:45:11+00:00",
+        "time": "2020-05-19T10:55:45+00:00",
         "type": "library",
         "extra": {
             "think": {
@@ -874,17 +874,17 @@
     },
     {
         "name": "topthink/think-multi-app",
-        "version": "v1.0.11",
-        "version_normalized": "1.0.11.0",
+        "version": "v1.0.14",
+        "version_normalized": "1.0.14.0",
         "source": {
             "type": "git",
             "url": "https://github.com/top-think/think-multi-app.git",
-            "reference": "215f4a6bb88e53ad41b448c61957336eb55ce6f9"
+            "reference": "ccaad7c2d33f42cb1cc2a78d6610aaec02cea4c3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/top-think/think-multi-app/zipball/215f4a6bb88e53ad41b448c61957336eb55ce6f9",
-            "reference": "215f4a6bb88e53ad41b448c61957336eb55ce6f9",
+            "url": "https://api.github.com/repos/top-think/think-multi-app/zipball/ccaad7c2d33f42cb1cc2a78d6610aaec02cea4c3",
+            "reference": "ccaad7c2d33f42cb1cc2a78d6610aaec02cea4c3",
             "shasum": "",
             "mirrors": [
                 {
@@ -897,7 +897,7 @@
             "php": ">=7.1.0",
             "topthink/framework": "^6.0.0"
         },
-        "time": "2019-10-29T06:34:59+00:00",
+        "time": "2020-07-12T13:50:37+00:00",
         "type": "library",
         "extra": {
             "think": {
