@@ -1,0 +1,1 @@
+a:6:{s:13:"install_error";b:0;s:11:"role_auth_1";a:0:{}s:10:"admin_user";a:5:{s:3:"uid";i:1;s:7:"role_id";s:1:"1";s:4:"nick";s:15:"超级管理员";s:6:"mobile";s:0:"";s:5:"email";s:0:"";}s:15:"admin_user_sign";s:40:"e230ed46ff13c93d16cf7dd20d669235b96fdee8";s:17:"admin_login_error";i:0;s:7:"captcha";a:1:{s:3:"key";s:60:"$2y$10$/vjKOzOyO.TO7r9ZFVI83OKu40OmiSFTqn1FQHTIpAIsoYxm0bZ9m";}}
