@@ -1,0 +1,60 @@
+.fr{float:right;}
+.fl{float:left;}
+.header {
+    width:100%;
+    min-height:50px;
+    background-color:#231f20;
+}
+.header .hi-header-nav {
+    max-width:1150px;
+    min-width:320px;
+    margin:0 auto;
+}
+.header .layui-nav {
+    background-color:#231f20;
+}
+.header .hi-header-nav .hi-header-nav-items {
+
+}
+.header .hi-header-nav .hi-header-nav-items .layui-nav-item {
+    line-height: 50px;
+}
+.header .hi-header-nav .hi-header-nav-items .layui-nav-item .layui-nav-child {
+    top:52px;
+}
+.header .hi-header-nav .hi-menu-btn {
+    display:none;
+}
+
+/*footer*/
+.footer {
+    background: #231f20;
+    text-align: center;
+}
+.footer .links {
+    padding:10px 0;
+    background: #555;
+    text-align: center;
+}
+.footer .links a{
+    color:#fff;
+}
+.footer .copyright{
+    padding:20px 0;
+}
+.footer .copyright a{
+    font-size: 15px;
+    color: #fff;
+}
+/*footer*/
+
+/*layui样式覆盖*/
+.layui-nav .layui-this::after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed::after{
+
+}
+
+@media screen and (max-width: 640px) {
+    .layui-nav .layui-nav-item a {
+
+    }
+}

@@ -1,0 +1,244 @@
+/* 公共属性 */
+body {
+    font-size: 14px;
+    color: #666;
+    background-color: #f6f6f6;
+}
+
+.hi-bg1 {
+    background-color: #231f20;
+}
+
+.hi_center {
+    text-align: center;
+}
+
+.layui-elem-quote {
+    background-color: inherit !important;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    background-color: inherit;
+    padding-left: 30px;
+}
+
+.layui-layer-msg {
+    z-index: 999
+}
+
+/* 间距 */
+.hi_pad_01 {
+    padding: 5px 0;
+}
+
+.hi_mar_01 {
+    margin-top: 20px;
+}
+
+.hi_mar_02 {
+    margin-top: 30px;
+}
+
+/* 登陆表单 */
+.hi-type-tag{
+    overflow: hidden;
+    margin-top:2rem;
+    margin-bottom:1.8rem;
+}
+.hi-type-tag ul{
+    overflow: hidden;
+    border-bottom: 1px solid rgba(28, 31, 33, 0.1);
+}
+.hi-type-tag ul li{
+    float: left;
+    width: 33.33%;
+    text-align: center;
+    padding:1rem 0;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.hi-type-tag ul li.active{
+    border-bottom: 2px solid #5FB878;
+}
+.hi-col-tips{
+    padding:0 0 1.3rem 0;
+    overflow: hidden;
+}
+.hi-col-tips a{
+    color:#9199a1;
+}
+.hi-col-tips a:hover{
+    color:#000;
+}
+.hi-col-tips .lf{
+    float:left;
+}
+.hi-col-tips .rf{
+    float: right;
+}
+.hi_info_main {
+    background-color: #fff;
+    padding: 20px;
+    max-width: 450px;
+    min-height: 50vh;
+    margin:6.8vh auto 0;
+    z-index: 9;
+    box-shadow: 0px 20px 80px 0px rgba(0,0,0,0.3);
+}
+
+.hi_info_main .layui-input {
+    font-family: "Roboto", sans-serif;
+    outline: 0;
+    background: #f2f2f2;
+    width: 100%;
+    border: 0;
+    margin: 0 0 1.5rem;
+    padding: 25px 10px 25px 35px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+.hi_info_main .layui-btn {
+    font-size: 0.95rem;
+    padding: 0.9rem 0;
+    height: auto;
+    line-height: normal;
+
+}
+
+.hi_info_icon {
+    position: absolute;
+    left: 8px;
+    top: 14px;
+    font-size: 20px;
+}
+
+.code-catpcha{
+    background-color: #f2f2f2;
+    z-index: 999;
+    cursor:pointer
+}
+.hi_info_vercode {
+    float: right;
+}
+.code-catpcha .reflesh{
+    overflow: hidden;
+    float: left;
+    padding:12px;
+    -webkit-transition: .4s linear;
+    transition: .4s ease-in;
+    margin-top: 3px;
+    cursor:pointer
+}
+.code-catpcha .reflesh:hover{
+    cursor: pointer;
+    color: #787d82;
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+}
+.code-catpcha .reflesh i{
+    font-size:20px;
+    color:#b5b9bc;
+}
+.code-input{
+    width: 55%;
+}
+.code-catpcha{
+    width: 45%;
+}
+
+.login-oauth{
+    margin-top: 1rem;
+    overflow: hidden;
+}
+.login-oauth .layui-elem-field{
+    padding:1rem 0;
+    border-color: #f3f3f3;
+}
+.login-oauth .layui-elem-field legend{
+    font-size: 0.9rem;
+    color:#9199a1
+}
+.login-oauth li{
+    width:20%;
+    text-align: center;
+    float: left;
+    overflow: hidden;
+}
+.login-oauth li img{
+    width: 3rem;
+    border-radius: 100%;
+}
+
+@media screen and (max-width: 640px) {
+    .code-input{
+        width: 45%;
+    }
+    .code-catpcha{
+        width: 55%;
+    }
+    .code-catpcha .reflesh{
+        padding:12px 0;
+    }
+    .hi-type-tag{
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .hi_info_main .layui-input{
+        margin:0 0 1rem;
+    }
+    .hi_mar_02{
+        margin-top:0.5rem;
+    }
+    .hi_mar_02 legend{
+        font-size:1.1rem;
+    }
+    .login-oauth li img{
+        width: 2.8rem;
+        border-radius: 100%;
+    }
+    body{background-color: #fff;}
+    .hi_info_main {
+        margin-top:0;
+        box-shadow: none;
+    }
+}
+@media screen and (max-width: 414px) {
+    .code-input{
+        width: 50%;
+    }
+    .code-catpcha{
+        width: 50%;
+    }
+}
+@media screen and (max-width: 375px) {
+    .code-input{
+        width: 45%;
+    }
+    .code-catpcha{
+        width: 55%;
+    }
+}
+@media screen and (max-width: 360px) {
+    .code-input{
+        width: 42%;
+    }
+    .code-catpcha{
+        width: 58%;
+    }
+}
+@media screen and (max-width: 320px) {
+    .code-input{
+        width: 40%;
+    }
+    .code-catpcha{
+        width: 60%;
+    }
+    .hi_info_vercode img{
+        width: 130px;
+    }
+}

@@ -1,0 +1,347 @@
+{extend name="block/base" /}
+{block name="title"}HiPHP-会员{if $from=="regist"}注册{else}登陆{/if}{/block}
+{block name="cssjs"}
+<link rel="stylesheet" href="__MODULE_STATIC_THEME__/css/style.css?v={:config('member.version')}" media="all"/>
+<link rel="stylesheet" href="__PUBLIC_PACK__/icon/iconfont/css/iconfont.css">
+{php}$title = '登陆';{/php}
+{if $from == "regist"}
+{php}$title = '注册';{/php}
+{/if}
+{/block}
+{block name="header"}
+{include file="block/header" /}
+{/block}
+{block name="content"}
+<div class="layui-row">
+    <div class="layui-col-sm12 layui-col-md12">
+        <div class="layui-carousel hi_login_height" id="hi-login" lay-filter="hi-login">
+            <div carousel-item="">
+                <div>
+                    <div class="hi_login_cont"></div>
+                </div>
+            </div>
+        </div>
+        <div class="hi_info_main">
+            <fieldset class="layui-elem-field layui-field-title hi_mar_02">
+                <legend>{if isset($oauths) && isset($oauthTitles)}正在与{$oauthTitles[$oauths['type']]}号"{$oauths['nick']}"关联中{else}欢迎{$title} - {:config('base.site_title')}{/if}</legend>
+            </fieldset>
+            {if isset($authTypes) && $authTypes}
+            {if $from=="regist"}
+            <div class="hi-type-tag">
+                <ul>
+                    {foreach $authTypes as $k=>$v}
+                    <li data-type="{$v['id']}" data-identifier="{$v['identifier']}" data-check="{$v['check_after']}"><span>{$v['title']}{$title}</span></li>
+                    {/foreach}
+                </ul>
+            </div>
+            {else}
+            <style>.hi-type-content{margin-top:1.5rem;}</style>
+            {/if}
+            <div class="hi-type-content">
+                <div class="layui-row">
+                    <form class="layui-form hi_pad_01" action="{:url('/member/'.$from)}">
+                        <div class="layui-col-sm12 layui-col-md12">
+                            <div class="layui-form-item">
+                                {php}
+                                if($from=="regist"){
+                                $accountTips = $authTypes[0]['title'];
+                                }else{
+                                $accountTips = '账号/手机号/邮箱';
+                                }
+                                {/php}
+                                <input type="text" name="account" lay-verify="required|account" autocomplete="off" placeholder="{$accountTips}" class="layui-input">
+                                {if $from=="regist"}
+                                <input type="hidden" name="account_type" value="{$authTypes[0]['id']}">
+                                <input type="hidden" name="account_identifier" value="{$authTypes[0]['identifier']}">
+                                <input type="hidden" name="check_after" value="{$authTypes[0]['check_after']}">
+                                {/if}
+                                <i class="layui-icon layui-icon-username hi_info_icon"></i>
+                            </div>
+                        </div>
+                        <div class="layui-col-sm12 layui-col-md12">
+                            <div class="layui-form-item">
+                                <input type="password" name="password" lay-verify="required|pass" autocomplete="off"
+                                       placeholder="密码" class="layui-input">
+                                <i class="layui-icon layui-icon-password hi_info_icon"></i>
+                            </div>
+                        </div>
+                        {if $from=="regist"}
+                        <div class="layui-col-sm12 layui-col-md12">
+                            <div class="layui-form-item">
+                                <input type="password" name="password_confirm" lay-verify="required|pass|confirmPass"
+                                       autocomplete="off" placeholder="重复密码" class="layui-input">
+                                <i class="layui-icon layui-icon-password hi_info_icon"></i>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="layui-col-sm12 layui-col-md12">
+                            <div class="layui-row">
+                                <div class="layui-col-xs4 layui-col-sm6 layui-col-md code-input">
+                                    <div class="layui-form-item">
+                                        <input type="text" name="captcha" id="vercode" lay-verify="required" autocomplete="off" placeholder="验证码" class="layui-input" maxlength="8">
+                                        <i class="layui-icon layui-icon-vercode hi_info_icon"></i>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs4 layui-col-sm6 layui-col-md6 code-catpcha">
+                                    <div class="reflesh">
+                                        <i class="iconfont iconshuaxin"></i>
+                                    </div>
+                                    <div class="hi_info_vercode hiVerCode">
+                                        <img src="{:url('captcha/index')}" width="150" height="50" id="captchaImg" alt="验证码"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {:token_field()}
+                        <div class="layui-col-sm12 layui-col-md12">
+                            <div class="hi-col-tips">
+                                <div class="lf">
+                                    {if $from == "regist"}
+                                    <a href="{if isset($oauths)}{:url('/member/login', ['oauth'=>$oauths['type']])}{else}{:url('/member/login')}{/if}">已有账号？立即{if isset($oauths)}去关联绑定{else}登陆{/if}</a>
+                                    {else}
+                                    <a href="{if isset($oauths)}{:url('/member/regist', ['oauth'=>$oauths['type']])}{else}{:url('/member/regist')}{/if}">未有账号？立即{if isset($oauths)}去创建绑定{else}注册{/if}</a>
+                                    {/if}
+                                </div>
+                                {if $from == "login"}
+<!--                                <div class="rf">-->
+<!--                                    <a href="#">找回密码</a> | <a href="#">无法登陆</a>-->
+<!--                                </div>-->
+                                {/if}
+                            </div>
+                        </div>
+                        {if isset($oauths)}
+                        <input type="hidden" name="oauth_type" value="{$oauths['type']}">
+                        {/if}
+                        <div class="layui-col-sm12 layui-col-md12">
+                            <input type="submit" class="layui-btn hi-bg1 layui-btn-fluid" value="立即{if isset($oauths)}绑定{else}{if $from=="regist"}注册{else}登陆{/if}{/if}" lay-submit="" lay-filter="hi-submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {/if}
+            {if !isset($oauths)}
+            {php}
+            $oauthInfos = array_filter(config('member.login_oauth'));
+            if($oauthInfos){
+                if(request()->isMobile()){
+                    foreach($oauthInfos as $k=>$v){
+                        if('wechat' == $v){
+                            unset($oauthInfos[$k]);
+                            break;
+                        }
+                    }
+                }else{
+                    foreach($oauthInfos as $k=>$v){
+                        if('wechat_wap' == $v){
+                            unset($oauthInfos[$k]);
+                            break;
+                        }
+                    }
+                }
+            {/php}
+            <div class="login-oauth">
+                <fieldset class="layui-elem-field site-title">
+                    <legend>使用第三方登陆</legend>
+                    <ul>
+                        {php}
+                        $params = request()->param();
+                        if(isset($params['from']) && $params['from']){
+                            $oauthCallback = $params['from'];
+                        }else{
+                            $oauthCallback = request()->scheme().'://'.config('base.site_domain');
+                        }
+                        {/php}
+                        {foreach $oauthInfos as $v}
+                        {php}
+                        $hookInfo = runHook('oauth_'.$v, ['callback'=>$oauthCallback], true);
+                        if($hookInfo){
+                            $info[] = $hookInfo[0];
+                        }
+                        {/php}
+                        {/foreach}
+                        {if isset($info) && $info}
+                        {foreach $info as $v}
+                        <li><a href="{$v['uri']}">{if isset($v['icon'])}<img src="{$v['icon']}"/>{else}{$v['title']}{/if}</a></li>
+                        {/foreach}
+                        {/if}
+                    </ul>
+                </fieldset>
+            </div>
+            {php}
+            }
+            {/php}
+            {/if}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="footer"}
+{include file="block/layui" /}
+<script>
+    window.sessionStorage.clear();
+    var captchaUrl = '{:url("captcha/index", [], false)}';
+    layui.use(['jquery', 'carousel', 'md5', 'form'], function () {
+        var $ = layui.$, form = layui.form, layer = layui.layer, md5 = layui.md5;
+        if($('.login-oauth')){
+            var oauthLen = $('.login-oauth li').length;
+            $('.login-oauth li').css('width',1/oauthLen*100+'%');
+        }
+
+        $('#captchaImg').attr('src', captchaUrl+'?'+Math.random());
+        $('.hi-type-tag ul li:first-child').addClass('active');
+        $(document).on('click','.hi-type-tag ul li',function () {
+            var title = $(this).children('span').text(), type = $(this).attr('data-type'),identifier = $(this).attr('data-identifier'),checkType = $(this).attr('data-check');
+            $('input[name="account"]').attr('placeholder',title);
+            $('input[name="account_type"]').val(type);
+            $('input[name="account_identifier"]').val(identifier);
+            $('input[name="check_after"]').val(checkType);
+            $(this).addClass('active').siblings().removeClass('active');
+        })
+        form.verify({
+            account: function (value) {
+                var type = $('input[name="account_identifier"]').val();
+                if(type == 'username'){
+                    if(!value.match(/^[\S]{4,30}$/)){
+                        return '账号至少4位，且不能出现空格';
+                    }
+                    if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)){
+                        return '账号不能有特殊字符';
+                    }
+                    if(/(^\_)|(\__)|(\_+$)/.test(value)){
+                        return '账号首尾不能出现下划线\'_\'';
+                    }
+                    if(/^\d+\d+\d$/.test(value)){
+                        return '账号不能全为数字';
+                    }
+                }else if(type == 'email'){
+                    if(!value.match(/^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/)){
+                        return '账号格式错误';
+                    }
+                }else if(type == 'phone'){
+                    if(!value.match(/^1[34578]\d{9}$/)){
+                        return '账号格式错误';
+                    }
+                }
+            }
+            , pass: [/^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格']
+            , confirmPass: function (value) {
+                if ($('input[name=password]').val() !== value) return '两次密码输入不一致！';
+            }
+            , content: function (value) {
+                layedit.sync(editIndex);
+            }
+        });
+        form.on('submit(hi-submit)', function (data) {
+            var that = $(this), _form = that.parents('form');
+            var msg = "{$from}" == "login" ? '登陆中, 请稍等...' : '注册中, 请稍等...';
+            var registMsg = layer.msg(msg,{time:500000});
+            that.prop('disabled', true);
+            that.css({'background-color':'#ccc','color':'#666'});
+            data.field.password = md5.exec(data.field.password);
+            if("{$from}" == "regist"){
+                data.field.password_confirm = md5.exec(data.field.password_confirm)
+            }
+            var checkType = $('input[name="check_after"]').val();
+            if(checkType == 1){
+                $.ajax({
+                    type: "post",
+                    url: "{:url('captcha/check', [], false)}",
+                    data: {'captcha':data.field.captcha},
+                    success: function(res) {
+                        if (res.code == 1) {
+                            layer.close(registMsg);
+                            if("{$from}" == "login"){
+                                ajaxSubmit(data.field, _form.attr('action'));
+                            }else if("{$from}" == "regist"){
+                                var identifier = $('input[name="account_identifier"]').val();
+                                try{
+                                    var verify = eval(identifier+"Verify(data.field)");
+                                }catch (e) {
+                                    layer.msg('未安装验证插件', {time:3000}, function() {
+                                        layer.closeAll();
+                                        that.prop('disabled', false);
+                                        that.css({'background-color': '#231f20', 'color': '#fff'});
+                                    })
+                                    return false;
+                                }
+                                verify.then(function (res) {
+                                    ajaxSubmit(res, _form.attr('action'));
+                                }, function (res) {
+                                    layer.msg(res.msg, {time:2000}, function() {
+                                        layer.closeAll();
+                                        that.prop('disabled', false);
+                                        that.css({'background-color': '#231f20', 'color': '#fff'});
+                                    })
+                                }).catch(function (res) {
+                                    layer.closeAll();
+                                    that.prop('disabled', false);
+                                    that.css({'background-color':'#231f20','color':'#fff'});
+                                });
+                            }
+                        } else {
+                            layer.msg('验证码错误',{time:3000});
+                            that.prop('disabled', false);
+                            that.css({'background-color':'#231f20','color':'#fff'});
+                        }
+                        return false;
+                    }
+                });
+            }else{
+                ajaxSubmit(data.field, _form.attr('action'));
+            }
+            return false;
+        });
+        function ajaxSubmit(fields, url){
+            var that = $('.layui-btn');
+            $.ajax({
+                type: "post",
+                url: url,
+                data: fields,
+                success: function(res) {
+                    if (res.data.token) {
+                        $('input[name="__token__"]').val(res.data.token);
+                    }
+                    layer.msg(res.msg, {time:2000}, function() {
+                        refleshCaptcha();
+                        if (res.code == 1) {
+                            location.href = res.url ? res.url : '/';
+                        } else {
+                            $('#captchaImg').attr('src', captchaUrl+'?'+Math.random());
+                            layer.closeAll();
+                            that.prop('disabled', false);
+                            that.css({'background-color':'#231f20','color':'#fff'});
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
+        $(document).on('click', '.code-catpcha', function () {
+            refleshCaptcha();
+        });
+        function refleshCaptcha() {
+            $('#captchaImg').attr('src', captchaUrl + '/rand/' + Math.random());
+        }
+    });
+</script>
+{php}
+$types = array_unique(array_column($authTypes, 'rule_hook_tp'));
+{/php}
+{foreach $types as $v}
+{if strpos($v, '|') !== false}
+{php}
+$item = explode('|', $v);
+$params = explode(',', $item[1]);
+$hookParams = [];
+foreach($params as $kk=>$vv){
+    $list = explode(':', $vv);
+    $hookParams[$list[0]] = $list[1];
+}
+{/php}
+{:runHook($item[0], $hookParams)}
+{else}
+{:runHook($v)}
+{/if}
+{/foreach}
+{/block}
+
