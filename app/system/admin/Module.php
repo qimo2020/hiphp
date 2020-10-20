@@ -23,7 +23,7 @@ use think\facade\Db;
 use think\Validate;
 use think\facade\Cache;
 use app\system\model\SystemLang as LangModel;
-/**
+/**mobile_theme
  * 模块管理控制器
  * @package app\system\admin
  */
