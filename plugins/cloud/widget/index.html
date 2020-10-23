@@ -9,7 +9,7 @@ $type = strtolower(request()->controller());
 <script>
     layui.use(['table', 'jquery', 'layer', 'md5'], function() {
         var $ = layui.jquery, layer = layui.layer, sid = '{if isset($requests)}{$requests["sid"]}{/if}',token = '{if isset($requests)}{$requests["token"]}{/if}', clientIp = '{:getClientIp()}', md5 = layui.md5;
-        var params = JSON.parse('{:urldecode(json_encode($requests))}');
+        var params = JSON.parse('{if isset($requests)}{:urldecode(json_encode($requests))}{else}{}{/if}');
         var checkConnect = function(){
             let promise = new Promise(function (resolve, reject) {
                 if(!token){

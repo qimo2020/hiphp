@@ -27,15 +27,15 @@ class Error extends Common
     {
         // 检测PHP环境
         if (version_compare(PHP_VERSION, '7.1.0', '<')) {
-            return $this->response(0,'PHP版本过低，最少需要PHP7.1.0，请升级PHP版本！');
+            return $this->response(0,'PHP版本过低，最少需要PHP7.1.0，请升级PHP版本！','/?s=install');
         };
 
         if (strpos($this->request->url(), 'public/')) {
-            return $this->response(0,'请将网站根目录指向public');
+            return $this->response(0,'请将网站根目录指向public','/?s=install');
         }
 
         if (is_file($this->app->getAppPath() . 'install.lock')) {
-            return $this->response(0,'如需重新安装，请手动删除/install.lock文件');
+            return $this->response(0,'如需重新安装，请手动删除/install.lock文件','/?s=install');
         }
         switch ($step) {
             case 2:
@@ -44,19 +44,19 @@ class Error extends Common
                 break;
             case 3:
                 if (session('install_error')) {
-                    return $this->response(0,'环境检测未通过，不能进行下一步操作！');
+                    return $this->response(0,'环境检测未通过，不能进行下一步操作！','/install/step=2');
                 }
                 return self::step3();
                 break;
             case 4:
                 if (session('install_error')) {
-                    return $this->response(0,'环境检测未通过，不能进行下一步操作！');
+                    return $this->response(0,'环境检测未通过，不能进行下一步操作！','/install/step=3');
                 }
                 return self::step4();
                 break;
             case 5:
                 if (session('install_error')) {
-                    return $this->response(0,'初始失败！');
+                    return $this->response(0,'初始失败！','/?s=install');
                 }
                 return self::step5();
                 break;
