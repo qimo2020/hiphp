@@ -36,7 +36,7 @@ class Error extends Common
         }
 
         if (is_file($this->app->getAppPath() . 'install.lock')) {
-            return $this->response(0,'如需重新安装，请手动删除/install.lock文件','/?s=install');
+            return $this->response(0,'如需重新安装，请手动删除/install.lock文件','/');
         }
         switch ($step) {
             case 2:
