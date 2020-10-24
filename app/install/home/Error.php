@@ -25,6 +25,7 @@ class Error extends Common
 
     public function index($step = 0)
     {
+
         // 检测PHP环境
         if (version_compare(PHP_VERSION, '7.1.0', '<')) {
             return $this->response(0,'PHP版本过低，最少需要PHP7.1.0，请升级PHP版本！','/?s=install');

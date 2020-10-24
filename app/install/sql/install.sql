@@ -262,7 +262,7 @@ CREATE TABLE `hi_system_module` (
   `app_id` varchar(30) NOT NULL DEFAULT '0' COMMENT '应用市场ID(0本地)',
   `app_keys` varchar(50) DEFAULT '' COMMENT '应用秘钥',
   `theme` varchar(50) NOT NULL DEFAULT 'default' COMMENT 'pc主题模板',
-  `mobile_theme` varchar(50) NOT NULL COMMENT '手机web主题模板',
+  `mobile_theme` varchar(50) NOT NULL DEFAULT '' COMMENT '手机web主题模板',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`),
