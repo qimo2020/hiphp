@@ -48,7 +48,7 @@ class Annex extends Base
      */
     public function favicon()
     {
-        return json(AnnexModel::favicon());
+        return json(AnnexModel::favicon('file'));
     }
 
     /**

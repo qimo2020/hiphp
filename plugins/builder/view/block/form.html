@@ -215,15 +215,18 @@
         <div class="layui-form-item">
             <label class="layui-form-label">{$v['title']}</label>
             <div class="layui-input-inline hi-editor">
-                {if isset($v['editor']) && in_array($v['editor'],['umeditor','ueditor'])}
-                <div id="{$v['name']}" class="field-editor" type="editor" editor="{if isset($v['editor'])}{$v['editor']}{/if}">{if isset($v['value'])}{$v['value']}{/if}</div>
-                {else/}
-                <textarea id="{$v['name']}" name="{$v['name']}" class="field-{$v['name']}" type="editor" editor="{if isset($v['editor'])}{$v['editor']}{/if}"></textarea>
-                {/if}
                 {if isset($v['editor'])}
-                {:editor([$v['name']], $buildData['buildForm']['upload_group'], $v['editor'])}
-                {else/}
-                {:editor([$v['name']], $buildData['buildForm']['upload_group'])}
+                    {php}
+                    $editorGroup = '';
+                    $value = '';
+                    if(isset($buildData["buildForm"]["upload_group"])){
+                        $editorGroup = $buildData["buildForm"]["upload_group"];
+                    }
+                    if(isset($v['value'])){
+                        $editorValue = $v['value'];
+                    }
+                    {/php}
+                   {:runHook($v['editor'], ['group'=>$editorGroup, 'name'=>$v['name'], 'value'=>$editorValue])}
                 {/if}
             </div>
         </div>

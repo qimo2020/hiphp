@@ -75,20 +75,6 @@ layui.define(['jquery', 'form'], function(exports) {
                         }
                         break;
                     case 'editor':
-                        if (formData[i]) {
-                            var editor = $('#'+i).attr('editor');
-                            if(editor == 'ueditor'){
-                                eval("ueObj"+i).ready(function(){
-                                    eval("ueObj"+i).setContent(formData[i]);  //赋值给UEditor
-                                })
-                            }else if(editor == 'kindeditor'){
-                                eval("kindObj"+i).html(formData[i]);
-                            }else if(editor == 'ckeditor'){
-                                eval("ckObj"+i).setData(formData[i]);
-                            }else{
-                                $('#'+i).html(formData[i]);
-                            }
-                        }
                         break;
                     default:
                         input = $('.field-'+i);

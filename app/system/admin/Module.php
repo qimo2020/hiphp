@@ -23,7 +23,7 @@ use think\facade\Db;
 use think\Validate;
 use think\facade\Cache;
 use app\system\model\SystemLang as LangModel;
-/**mobile_theme
+/**
  * 模块管理控制器
  * @package app\system\admin
  */
@@ -371,6 +371,7 @@ class Module extends Base
         }
 
         $mod = ModuleModel::where('id', $id)->find();
+
         if (!$mod) {
             return $this->response(0,'模块不存在');
         }

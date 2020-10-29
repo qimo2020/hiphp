@@ -126,7 +126,7 @@ class Member extends Common
                 'title'=>'确认密码',
                 'tips'=>'不能低于6位',
                 'value'=>''
-            ]
+            ],
         ];
         if($op == 'edit'){
             $result['buildForm']['items'][] = [
@@ -134,6 +134,7 @@ class Member extends Common
                 'type'=>'hidden',
                 'value'=>'',
             ];
+
         }
         return $result;
     }

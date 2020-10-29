@@ -12,10 +12,10 @@ namespace app\common\controller;
 use app\BaseController;
 use app\system\model\SystemModule as ModuleModel;
 use app\system\model\SystemPlugin as PluginModel;
+use think\facade\Cache;
 use think\facade\View;
 use think\Container;
 use think\Response;
-use think\exception\HttpResponseException;
 use think\facade\Request;
 /**
  * 框架公共控制器
@@ -39,7 +39,11 @@ class Common extends BaseController
             }
             $params = Request::param();
             $isMobile = Request::isMobile();
-            $appName = isset($params['_p']) && $params['_p'] && array_key_exists($params['_p'], cache('plugins')) ? $params['_p'] : $moduleName;
+            if(!$pluginCaches = cache('plugins')){
+                $pluginCaches = pluginModel::where('status', 2)->column('status', 'name');
+                Cache::tag('plugin_tag')->set('plugins', $pluginCaches);
+            }
+            $appName = isset($params['_p']) && $params['_p'] && array_key_exists($params['_p'], $pluginCaches) ? $params['_p'] : $moduleName;
             $mobile_site_status = config($appName.'.mobile_site_status') ?? config('base.mobile_site_status');
             $mobile_domain = config($appName.'.mobile_domain') ?? config('base.mobile_domain');
             $mobile_response = config($appName.'.mobile_response') ?? config('base.mobile_response');

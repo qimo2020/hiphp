@@ -20,8 +20,8 @@ CREATE TABLE `pre_member_auth_type` (
   `rule_hook` varchar(30) DEFAULT '' COMMENT '前置验证钩子',
   `rule_hook_after` varchar(30) DEFAULT '' COMMENT '后置验证钩子',
   `rule_hook_tp` varchar(30) DEFAULT '' COMMENT '前端验证钩子',
-  `rule` text DEFAULT '' COMMENT '字段验证规则',
-  `message` text DEFAULT '' COMMENT '字段验证错误提示',
+  `rule` text COMMENT '字段验证规则',
+  `message` text COMMENT '字段验证错误提示',
   `check_after` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否插件验证',
   `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`)

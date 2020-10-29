@@ -92,7 +92,6 @@ class SystemAnnex extends Model
         $input = $param['input'] ?? 'file';
         $fullPath = $param['full_path'] ?? false;
         $driver = $param['driver'] ?? config('upload.driver');
-
         if (empty($water)) {
             if (config('upload.image_watermark') == 1) {
                 $water = 'image';
@@ -101,9 +100,6 @@ class SystemAnnex extends Model
             }
         }
         switch ($from) {
-            case 'kindeditor':
-                $input = 'imgFile';
-                break;
             case 'umeditor':
                 $input = 'upfile';
                 break;
@@ -119,7 +115,6 @@ class SystemAnnex extends Model
                     exit;
                 }
                 break;
-
             default:// 默认使用layui.upload上传控件
                 break;
         }
@@ -132,17 +127,17 @@ class SystemAnnex extends Model
             return self::result('禁止上传php,html文件！', $from);
         }
         // 格式、大小校验
-        if (self::checkExt(config('upload.image_ext'))) {
+        if (self::checkExt(config('upload.image_ext'), $input)) {
             $type = 'image';
             if (config('upload.image_size') > 0 && !self::checkSize(config('upload.image_size') * 1024)) {
                 return self::result('上传的图片大小超过系统限制[' . config('upload.image_size') . 'KB]！', $from);
             }
-        } else if (self::checkExt(config('upload.file_ext'))) {
+        } else if (self::checkExt(config('upload.file_ext'), $input)) {
             $type = 'file';
             if (config('upload.file_size') > 0 && !self::checkSize(config('upload.file_size') * 1024)) {
                 return self::result('上传的文件大小超过系统限制[' . config('upload.file_size') . 'KB]！', $from);
             }
-        } else if (self::checkExt('avi,mkv,mp3,mp4')) {
+        } else if (self::checkExt('avi,mkv,mp3,mp4', $input)) {
             $type = 'media';
         } else {
             return self::result('非系统允许的上传格式！', $from);
@@ -181,7 +176,8 @@ class SystemAnnex extends Model
             }
         } else {
             // 文件存放路径
-            $filePath = isset($param['temp']) && $param['temp'] == 0 ? $group . '/' . $type : $group . '/temp/' . $type;
+            $levelPath = isset($param['classify_dir']) && $param['classify_dir'] ? $param['classify_dir'] . '/' : ''; //分类级储存
+            $filePath = isset($param['temp']) && $param['temp'] == 0 ? $group . '/' . $levelPath . $type : $group . '/temp/' . $levelPath . $type;
             // 执行上传
             if(strpos($defSavePath, '..') === false && $defSavePath != './uploads'){ //上传路径解析
                 $filesConfig = config('filesystem');
@@ -281,10 +277,10 @@ class SystemAnnex extends Model
      * favicon 图标上传
      * @return json
      */
-    public static function favicon()
+    public static function favicon($input)
     {
-        $file = request()->file('file');
-        if (!self::checkExt('ico')) {
+        $file = request()->file($input);
+        if (!self::checkExt('ico', $input)) {
             return self::result('只允许上传ico格式');
         }
         $file->move('./', 'favicon.ico');
@@ -310,11 +306,10 @@ class SystemAnnex extends Model
                 }
                 break;
             case 'ckeditor':
-                $ckNum = isset($data['CKEditorFuncNum']) && $data['CKEditorFuncNum']?$data['CKEditorFuncNum']:1;
                 if ($status == 1) {
-                    echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction('.$ckNum.', "' . $data['file'] . '", "");</script>';
+                    echo json_encode(['code'=>1, 'url'=>$data['file']]);
                 } else {
-                    echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction('.$ckNum.', "", "' . $info . '");</script>';
+                    echo json_encode(['code'=>0]);
                 }
                 exit;
                 break;
@@ -351,9 +346,9 @@ class SystemAnnex extends Model
      * @param  array|string   $ext    允许后缀
      * @return bool
      */
-    public static function checkExt($ext)
+    public static function checkExt($ext, $input)
     {
-        $file = request()->file('file');
+        $file = request()->file($input);
         if (is_string($ext)) {
             $ext = explode(',', $ext);
         }

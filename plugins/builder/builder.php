@@ -368,7 +368,6 @@ class builder extends Plugin
                     return $this->response(0, 'error');
                 }
             }
-
         }
         $pkVal = $this->request->param($pk);
         $row = [];
@@ -390,8 +389,8 @@ class builder extends Plugin
         }
         //合并赋值数据
         if(!empty($row) && !empty($this->assignData)){
-            foreach ($this->assignData as $k=>$v){
-                $row[$k] = $v;
+            foreach ($this->assignData as $k=>$val){
+                $row[$k] = $val;
             }
         }
         $this->assign('formData', $row);
