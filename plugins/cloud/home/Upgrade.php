@@ -164,13 +164,13 @@ class Upgrade extends Base
             }
 
             // 安装包应用目录
-            $appTempPath = isset($params['app_type']) && $params['app_type'] == 'system' ? $tempAppDir . '/' : $tempAppDir .'/' . $params['app_name'] . '/';
+            $appTempPath = isset($params['app_type']) && $params['app_type'] == 'system' ? $tempAppDir : $tempAppDir .'/' . $params['app_name'] . '/';
             // 应用[模块/插件]获取安装包基本信息
             if($dependAppIns){
                 $infoFilePath = $appTempPath . 'info.php';
                 $infoData = include_once $infoFilePath;
             }else if(in_array($params['app_type'], ['component', 'system'])){
-                $infoFilePath = $decomPath . '/uploads/' . 'config.xml';
+                $infoFilePath = $decomPath . '/' . 'config.xml';
                 $infoXml = file_get_contents($infoFilePath);
                 $infoData = xml2array($infoXml);
             }else if('theme' == $params['app_type']){
@@ -187,7 +187,7 @@ class Upgrade extends Base
             if(isset($params['op']) && $params['op'] == 'upgrade'){
                 $first = $params['app_type'] == 'system' ? config('hiphp') : Db::name('system_' . $params['app_type'])->where(['app_id'=>$params['app_id']])->find();
                 if(null !== $first && version_compare($infoData['version'], $first['version'],'<=')){
-                    Dir::delDir($decomPath);
+                    Dir::delDir(realpath($decomPath));
                     @unlink($params['file']);
                     self::$error = '安装包版本有误';
                     return false;
@@ -267,7 +267,8 @@ class Upgrade extends Base
             if (!is_dir($appPath)) {
                 Dir::create($appPath, 0777);
             }
-            Dir::copyDir($appTempPath,  $appPath);
+            Dir::copyDir(realpath($appTempPath),  $appPath);
+
             //静态资源目录处理
             if($params['app_type'] != 'system'){
                 $appStaticDir = './static/' . ($params['type'] == 0 ? 'm_' : 'p_') . $params['app_name'] . '/';//应用静态资源目录
@@ -282,7 +283,7 @@ class Upgrade extends Base
                 Dir::copyDir($tempAppStaticDir, $appStaticDir);
             }
             // 删除临时目录和安装包
-            Dir::delDir($decomPath);
+            Dir::delDir(realpath($decomPath));
             @unlink(realpath($params['file']));
             $tag = $params['app_type'] == 'system' ? 'hiphp_config' : $params['app_type'];
             Cache::tag($tag . '_tag')->clear();

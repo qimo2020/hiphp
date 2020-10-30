@@ -171,7 +171,7 @@ $type = strtolower(request()->controller());
                             }
                             if(res.code == 1){
                                 if(typeof res.data.file_size != 'undefined' && res.data.file_size > 0){
-                                    let precent = Math.round(parseFloat(res.data.file_size) / parseFloat(paramsArr.size) * 10000) / 100.00, tips = '';
+                                    let precent = Math.round(parseFloat(res.data.file_size) / parseFloat(paramsArr.file_size) * 10000) / 100, tips = '';
                                     if(precent >= 100){
                                         precent = 100;
                                     }
