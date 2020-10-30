@@ -46,6 +46,7 @@ class Entry extends Common
                 $loginError = ($loginError+1);
                 session('admin_login_error', $loginError);
                 $data['token'] = token();
+                $data['loginError'] = $loginError;
                 return $this->response(0, $model->error, (string)url('index'), $data);
             }
             session('admin_login_error', 0);

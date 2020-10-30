@@ -34,12 +34,6 @@ class system extends Module
      * @return mixed
      */
     public function upgradeAfter(){
-		$prefix = config('database.connections.mysql.prefix');
-        $res = Db::query("SELECT COLUMN_NAME FROM information_schema.columns WHERE TABLE_NAME='{$prefix}system_user'");
-        $fields = array_column($res,"COLUMN_NAME");
-		if(!in_array('test', $fields)){
-			Db::execute("alter table {$prefix}system_user add test varchar(10) not Null");
-		}
         return true;
     }
     /**

@@ -94,6 +94,9 @@ layui.use(['form', 'layer', 'md5', 'jquery'], function() {
                     if (res.code == 1) {
                         location.href = res.url;
                     } else {
+                        if(res.data && res.data.loginError && res.data.loginError >= 3){
+                            $('input[name=captcha]').parent().show();
+                        }
                         that.prop('disabled', false);
                     }
                 });
