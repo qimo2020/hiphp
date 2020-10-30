@@ -187,7 +187,7 @@ class Upgrade extends Base
             if(isset($params['op']) && $params['op'] == 'upgrade'){
                 $first = $params['app_type'] == 'system' ? config('hiphp') : Db::name('system_' . $params['app_type'])->where(['app_id'=>$params['app_id']])->find();
                 if(null !== $first && version_compare($infoData['version'], $first['version'],'<=')){
-                    Dir::delDir(realpath($decomPath));
+                    Dir::delDir($decomPath);
                     @unlink($params['file']);
                     self::$error = '安装包版本有误';
                     return false;
@@ -267,6 +267,7 @@ class Upgrade extends Base
             if (!is_dir($appPath)) {
                 Dir::create($appPath, 0777);
             }
+
             Dir::copyDir(realpath($appTempPath),  $appPath);
 
             //静态资源目录处理
@@ -283,7 +284,7 @@ class Upgrade extends Base
                 Dir::copyDir($tempAppStaticDir, $appStaticDir);
             }
             // 删除临时目录和安装包
-            Dir::delDir(realpath($decomPath));
+            Dir::delDir($decomPath);
             @unlink(realpath($params['file']));
             $tag = $params['app_type'] == 'system' ? 'hiphp_config' : $params['app_type'];
             Cache::tag($tag . '_tag')->clear();
