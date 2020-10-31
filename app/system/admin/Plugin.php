@@ -174,7 +174,7 @@ class Plugin extends Base
             }
         }
         $this->assign('page', ['page'=>$status]);
-        $this->assign('emptyTips', '<div class="hi-no-data-tips" style="padding: 50px 0;text-align: center">未发现相关插件，快去<a href="' . url('store/index') . '"> <strong style="color:#428bca">应用市场</strong> </a>看看吧！</div>');
+        $this->assign('emptyTips', '<div class="hi-no-data-tips" style="padding: 50px 0;text-align: center">未发现相关插件，快去<a target="_blank" href="' . config('clouds.store_push_domain') . '"> <strong style="color:#428bca">应用市场</strong> </a>看看吧！</div>');
         $this->assign('dataInfo', array_values($plugins));
         $this->assign('tabData', $tabData);
         $this->assign('tabType', 3);

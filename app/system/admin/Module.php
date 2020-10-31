@@ -124,7 +124,7 @@ class Module extends Base
                 }
             }
         }
-        $tips = $tips ? $tips : '<div class="hi-no-data-tips" style="padding: 50px 0;text-align: center">未发现相关模块，快去<a href="' . url('store/index') . '"> <strong style="color:#428bca">应用市场</strong> </a>看看吧！</div>';
+        $tips = $tips ? $tips : '<div class="hi-no-data-tips" style="padding: 50px 0;text-align: center">未发现相关模块，快去<a target="_blank" href="' . config('clouds.store_push_domain') . '"> <strong style="color:#428bca">应用市场</strong> </a>看看吧！</div>';
 
         if($status == 3 || $status == 4){
             $components = ComponentModel::where('app_type',0)->order('sort,id')->column('id,title,author,intro,app_id,app_keys,name,version,status');
