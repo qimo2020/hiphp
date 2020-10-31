@@ -1,4 +1,5 @@
 <textarea id="{$data['name']}" type="editor" name="{$data['name']}" class="field-{$data['name']}">{$data['value']}</textarea>
+<script src="__PUBLIC_PACK__/jquery/jquery-3.4.1.min.js?v={:config('tinymce.version')}"></script>
 <script src="__PUBLIC_STATIC__/p_tinymce/default/js/tinymce.min.js?v={:config('tinymce.version')}"></script>
 <script src="__PUBLIC_STATIC__/p_tinymce/default/js/prism.js?v={:config('tinymce.version')}"></script>
 <link href="__PUBLIC_STATIC__/p_tinymce/default/css/prism.css" rel="stylesheet" />
@@ -17,9 +18,7 @@ if(isset($data['config'])){
 }
 {/php}
 <script>
-    layui.use(["jquery"], function () {
-        var $ = layui.jquery;
-         $(function(){
+    $(function(){
             function image_upload_handler (blobInfo, success, failure, progress) {
                 var xhr, formData;
                 xhr = new XMLHttpRequest();
@@ -69,6 +68,4 @@ if(isset($data['config'])){
             });
 
          })
-
-    })
 </script>
