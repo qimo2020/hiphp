@@ -46,6 +46,14 @@ return [
                     'value'=>'zh_CN',
                 ],
                 [
+                    'name'=>'menu',
+                    'type'=>'radio',
+                    'title'=>'菜单栏',
+                    'tips'=>'非开发人员不要随意修改此处',
+                    'value'=>1,
+                    'options'=>'0:关闭;1:开启'
+                ],
+                [
                     'name'=>'plugins',
                     'type'=>'input',
                     'title'=>'插件集',
@@ -72,6 +80,13 @@ return [
                     'title'=>'字体大小',
                     'tips'=>'非开发人员不要随意修改此处',
                     'value'=>'12px 14px 16px 18px 24px 36px 48px 56px 72px',
+                ],
+                [
+                    'name'=>'wh',
+                    'type'=>'input',
+                    'title'=>'长度和高度',
+                    'tips'=>'非开发人员不要随意修改此处',
+                    'value'=>'',
                 ],
             ]
         ]

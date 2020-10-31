@@ -9,12 +9,20 @@ $plugins = config("tinymce.plugins");
 $toolbar = config("tinymce.toolbar");
 $fontsize = config("tinymce.fontsize");
 $fontfamily = config("tinymce.fontfamily");
+$menu = config("tinymce.menu");
+$wh = config("tinymce.wh");
 if(isset($data['config'])){
     $language = $data['config']['language'] ?? $language;
     $plugins = $data['config']['plugins'] ?? $plugins;
     $toolbar = $data['config']['toolbar'] ?? $toolbar;
     $fontsize = $data['config']['fontsize'] ?? $fontsize;
     $fontfamily = $data['config']['fontfamily'] ?? $fontfamily;
+    $menu = $data['config']['menu'] ?? $menu;
+    $menu = $menu == 0 || $menu === false ? false : true;
+    $wh = $data['config']['wh'] ?? $wh;
+}
+if($wh && strpos($wh, 'x') !== false){
+    $wh = explode('x', $wh);
 }
 {/php}
 <script>
@@ -54,10 +62,13 @@ if(isset($data['config'])){
             tinymce.init({
                 selector: '#{$data["name"]}',
                 language:'{:$language}',
+                menubar: '{:$menu}',
                 plugins: '{:$plugins}',
                 toolbar: '{:$toolbar}',
                 fontsize_formats: '{:$fontsize}',
                 font_formats: '{:$fontfamily}',
+                width:'{if $wh}{$wh[0]}{/if}',
+                height:'{if $wh}{$wh[1]}{/if}',
                 codesample_global_prismjs: true,
                 images_upload_handler: image_upload_handler,
                 setup: function(editor) {
