@@ -955,9 +955,24 @@ class Plugin extends Base
         if (!PluginModel::where(['name' => $plugin, 'status' => 2])->find()) {
             return $this->response(0, "插件可能不存在或者未安装");
         }
-        if (!pluginActionExist($plugin . '/' . $controller . '/' . $action)) {
+        $controllerLayer = 'admin';
+        $apps = \app\system\model\SystemPlugin::getPlugins();
+        foreach ($apps as $v) {
+            if ($plugin == $v['name'] && 2 == $v['status']) {
+                $appTheme = $v['theme'];
+                break;
+            }
+        }
+        if(isset($appTheme) && $appTheme && 'default' != $appTheme){
+            $this->app->setNamespace('plugins');
+            $class = $this->app->parseClass($plugin . '\\' . $controllerLayer . '\\' . $appTheme, $controller);
+            if (class_exists($class)) {
+                $controllerLayer = $controllerLayer . '\\' . $appTheme;
+            }
+        }
+        if (!pluginActionExist($plugin . '/' . $controller . '/' . $action, $controllerLayer)) {
             return $this->response(0, "找不到插件方法：{$plugin}/{$controller}/{$action}");
         }
-        return pluginRun($plugin . '/' . $controller . '/' . $action, $params);
+        return pluginRun($plugin . '/' . $controller . '/' . $action, $params, $controllerLayer);
     }
 }

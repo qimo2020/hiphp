@@ -40,6 +40,7 @@ class InitEvent
             config(['view_dir_name'=>'theme'], 'view');
             $controllerDir = 'home';
         }
+        $moduleName = strtolower(app('http')->getName());
         config(['controller_layer'=>$controllerDir], 'route');
         //检查安装
         if(!is_file(base_path() . 'install/install.lock')) {
@@ -65,7 +66,7 @@ class InitEvent
             $pathInfo = array_filter(explode('/', (string)$pathInfo));
             if (empty($pathInfo) || !in_array($pathInfo[0], array_column(ModuleModel::getModules(), 'name'))) {
                 if(ModuleModel::getDefaultModule()){
-                    $moduleName = ModuleModel::getDefaultModule()['name'] ?: 'index';
+                    $moduleName = ModuleModel::getDefaultModule()['name'] ?: strtolower(config('app.default_app'));
                     app('http')->name($moduleName)->setBind(true);
                 }
             }

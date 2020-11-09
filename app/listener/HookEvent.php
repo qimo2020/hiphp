@@ -26,7 +26,6 @@ class HookEvent
         $hookPlugins = cache('hook_plugins');
         $hooks = cache('hooks');
         $plugins = cache('plugins');
-
         if (!$hookPlugins) {
             $hooks = hookModel::where('status', 1)->column('status', 'name');
             $plugins = pluginModel::where('status', 2)->column('status', 'name');

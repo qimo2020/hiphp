@@ -9,6 +9,7 @@
 // | Author: 祈陌 <3411869134@qq.com>，开发者QQ群：829699898
 // +----------------------------------------------------------------------
 namespace app\common\controller;
+
 use app\BaseController;
 use app\system\model\SystemModule as ModuleModel;
 use app\system\model\SystemPlugin as PluginModel;
@@ -17,6 +18,7 @@ use think\facade\View;
 use think\Container;
 use think\Response;
 use think\facade\Request;
+
 /**
  * 框架公共控制器
  * @package app\common\controller
@@ -25,13 +27,11 @@ class Common extends BaseController
 {
     protected function initialize()
     {
-        if(!defined('APP_HAS_INIT')){
-
-            if (defined('INSTALL_ENTRANCE')){
+        if (!defined('APP_HAS_INIT')) {
+            if (defined('INSTALL_ENTRANCE')) {
                 return;
             }
             $viewDepr = config('view.view_depr');
-            // 当前模块名称
             $moduleName = strtolower(app('http')->getName());
             if (!$moduleName) {
                 header('Location: ' . request()->domain());
@@ -39,17 +39,15 @@ class Common extends BaseController
             }
             $params = Request::param();
             $isMobile = Request::isMobile();
-            if(!$pluginCaches = cache('plugins')){
-                $pluginCaches = pluginModel::where('status', 2)->column('status', 'name');
-                Cache::tag('plugin_tag')->set('plugins', $pluginCaches);
-            }
+            $pluginCaches = cache('plugins');
             $appName = isset($params['_p']) && $params['_p'] && array_key_exists($params['_p'], $pluginCaches) ? $params['_p'] : $moduleName;
-            $mobile_site_status = config($appName.'.mobile_site_status') ?? config('base.mobile_site_status');
-            $mobile_domain = config($appName.'.mobile_domain') ?? config('base.mobile_domain');
-            $mobile_response = config($appName.'.mobile_response') ?? config('base.mobile_response');
+            $mobile_site_status = config($appName . '.mobile_site_status') ?? config('base.mobile_site_status');
+            $mobile_domain = config($appName . '.mobile_domain') ?? config('base.mobile_domain');
+            $mobile_response = config($appName . '.mobile_response') ?? config('base.mobile_response');
             $isMobileDir = $mobile_site_status && $isMobile === true && !$mobile_response ? 'mobile' . $viewDepr : '';
             // 插件/模块主题,静态资源目录解析[后台/前端]
             $appTheme = 'default';
+            $appViewTheme = '';
             $viewReplaceStr = [
                 // 站点根目录
                 '__ROOT_DIR__' => ROOT_DIR,
@@ -60,12 +58,13 @@ class Common extends BaseController
             ];
             //插件/模块 静态资源模版变量加载
             config(['tpl_replace_string' => $viewReplaceStr], 'view');
-
             if (isset($params['_p'])) {
                 $plugins = PluginModel::getPlugins();
                 foreach ($plugins as $v) {
                     if ($appName == $v['name'] && 2 == $v['status']) {
                         $appTheme = $mobile_site_status && $isMobile === true ? ($v['mobile_theme'] ?: 'default') : ($v['theme'] ?: 'default');
+                        $appViewTheme = $v['theme'];
+                        Cache::tag('plugin_tag')->set('plugin_default_theme', $appViewTheme);
                         break;
                     }
                 }
@@ -82,6 +81,7 @@ class Common extends BaseController
                     }
                     //模块的默认主题
                     $appTheme = $mobile_site_status && $isMobile === true ? ($moduleInfo['mobile_theme'] ?: 'default') : ($moduleInfo['theme'] ?: 'default');
+                    $appViewTheme = $moduleInfo['theme'];
                 }
                 // 模块静态资源目录[后台/前端]
                 $viewReplaceStr['__MODULE_STATIC__'] = ROOT_DIR . 'static' . $viewDepr . 'm_' . $appName;
@@ -89,7 +89,6 @@ class Common extends BaseController
             }
             //插件/模块 静态资源模版变量重载
             config(['tpl_replace_string' => $viewReplaceStr], 'view');
-
             if (defined('ADMIN_ENTRANCE')) {
                 //后台主题目录调整
                 if ('system' == $appName || isset($params['_p'])) {
@@ -100,8 +99,14 @@ class Common extends BaseController
                             break;
                         }
                     }
-                    $themePath = base_path() . 'system/view/' . $appTheme;
-                    config(['view_path' => $themePath . '/'], 'view');
+                    $themePath = base_path() . 'system/view/' . $appTheme . '/';
+                    config(['view_path' => $themePath], 'view');
+                } else {
+                    if ($appViewTheme && 'default' != $appViewTheme) {
+                        if (is_dir($appViewPath = app_path() . 'view/' . $appViewTheme . '/')) {
+                            config(['view_path' => $appViewPath], 'view');
+                        }
+                    }
                 }
                 if ('index' == $appName) {
                     header('Location: ' . url('system/entry/index'));
@@ -134,12 +139,13 @@ class Common extends BaseController
                     }
                 }
                 //调整插件/模块主题目录地址
-                if (in_array($appName, ['index']) === false) { //个别应用无需修改主题路径设置
+                if (in_array($appName, [strtolower(config('app.default_app'))]) === false) { //个别应用无需修改主题路径设置
                     config(['view_path' => $themePath . $appTheme . '/'], 'view');
                 }
             }
+
             //修正插件重复初始化问题
-            if(isset($params['_p'])){
+            if (isset($params['_p'])) {
                 define('APP_HAS_INIT', true);
             }
 
@@ -158,12 +164,35 @@ class Common extends BaseController
     final protected function view($template = '', $vars = [])
     {
         if (defined('IS_PLUGIN')) {
-            return self::pluginFetch($template , $vars);
+            return self::pluginFetch($template, $vars);
+        }
+        $suffix = config('view.view_suffix');
+        $view_path = config('view.view_path');
+        if ($view_path) {
+            $controller = strtolower($this->request->controller());
+            $action = strtolower($this->request->action());
+            if ($template && strpos($template, '/') === false) {
+                $template = $controller . '/' . $template;
+            }
+            $tplFile = ($template ?: $controller . '/' . $action) . '.' . $suffix;
+            if (!file_exists($viewPath = $view_path . $tplFile)) {
+                $isTheme = strpos($view_path, 'theme');
+                if ($isTheme !== false) {
+                    $themeDirArr = explode('theme/', $view_path);
+                    $isMobile = strpos($view_path, 'mobile') !== false ? 'theme/mobile' : 'theme';
+                    $viewPath = $themeDirArr[0] . $isMobile . '/default/';
+                } else {
+                    $themeDirIdentifier = 'view';
+                    $pathArr = explode('view', $viewPath);
+                    $viewPath = $pathArr[0] . $themeDirIdentifier . '/';
+                }
+                config(['view_path' => $viewPath], 'view');
+            }
         }
         if (cache('plugins') && array_key_exists('builder', cache('plugins')) && strpos($template, 'build') !== false) {
             $tpl = explode('/', $template);
             $tplPath = root_path() . "plugins/builder/view/block/{$tpl[1]}.";
-            $template = strtolower($tplPath . config('view.view_suffix'));
+            $template = strtolower($tplPath . $suffix);
         }
         return View::fetch($template, $vars);
     }
@@ -185,36 +214,51 @@ class Common extends BaseController
         } elseif (strpos($template, '/') == false) {
             $template = $controller . '/' . $template;
         }
+        $suffix = $this->app->config->get('view.view_suffix');
         if (array_key_exists('builder', (array)cache('plugins')) && strpos($template, 'build') !== false) {
             $tpl = explode('/', $template);
             $tplPath = root_path() . "plugins/builder/view/block/{$tpl[1]}.";
         } else {
-            if(defined('ADMIN_ENTRANCE') && ADMIN_ENTRANCE == 'admin'){
+            if ($template && strpos($template, '/') === false) {
+                $template = $controller . '/' . $template;
+            }
+            $tplFile = ($template ?: $controller . '/' . $action) . '.';
+            $tplDirPath = 'view';
+            if (defined('ADMIN_ENTRANCE') && ADMIN_ENTRANCE == 'admin') {
                 $tplPath = root_path() . "plugins/{$plugin}/view/{$template}.";
-            }else{
+                $tplDirPath .= "/";
+            } else {
                 $pluginTheme = 'default';
+                $tplDirPath = 'theme';
                 $plugins = PluginModel::getPlugins();
-                $mobile_site_status = config($plugin.'.mobile_site_status') ?? config('base.mobile_site_status');
-                $mobile_response = config($plugin.'.mobile_response') ?? config('base.mobile_response');
-                foreach ($plugins as $v){
-                    if($plugin == $v['name'] && 2 == $v['status']){
+                $mobile_site_status = config($plugin . '.mobile_site_status') ?? config('base.mobile_site_status');
+                $mobile_response = config($plugin . '.mobile_response') ?? config('base.mobile_response');
+                foreach ($plugins as $v) {
+                    if ($plugin == $v['name'] && 2 == $v['status']) {
                         $pluginTheme = $mobile_site_status && Request::isMobile() === true ? ($v['mobile_theme'] ?: 'default') : ($v['theme'] ?: 'default');
                         break;
                     }
                 }
                 $isMobileDir = !$mobile_response && $mobile_site_status && Request::isMobile() === true ? 'mobile/' : '';
+                $tplDirPath .= $isMobileDir ? "/{$isMobileDir}" : '/';
                 $tplPath = root_path() . "plugins/{$plugin}/theme/{$isMobileDir}{$pluginTheme}/{$template}.";
             }
+            if ($theme = cache('plugin_default_theme')) {
+                if ('default' != $theme && !file_exists($viewPath = ($viewTplPath = strtolower(root_path() . "plugins/{$plugin}/" . $tplDirPath . $theme . '/' . $tplFile)) . $suffix)) {
+                    $tplPath = str_replace($theme, 'default', $viewTplPath);
+                }
+            }
+
         }
-        $template = strtolower($tplPath . $this->app->config->get('view.view_suffix'));
+        $template = strtolower($tplPath . $suffix);
         return View::fetch($template, $vars);
     }
 
     /**
      * 模板变量赋值
      * @access protected
-     * @param  mixed $name 要显示的模板变量
-     * @param  mixed $value 变量的值
+     * @param mixed $name 要显示的模板变量
+     * @param mixed $value 变量的值
      * @return $this
      * @author 祈陌 <3411869134@qq.com>
      */

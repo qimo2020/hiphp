@@ -39,11 +39,26 @@ class Plugin extends Common
             return $this->response(0, "插件可能不存在或者未安装！");
         }
         $controllerLayer = isset($params['api']) && !empty($params['api']) && 'api' == $params['api'] ? 'api' : 'home';
+        if($controllerLayer == 'home'){
+            $apps = \app\system\model\SystemPlugin::getPlugins();
+            foreach ($apps as $v) {
+                if ($plugin == $v['name'] && 2 == $v['status']) {
+                    $appTheme = $v['theme'];
+                    break;
+                }
+            }
+            if(isset($appTheme) && $appTheme && 'default' != $appTheme){
+                $this->app->setNamespace('plugins');
+                $class = $this->app->parseClass($plugin . '\\home\\' . $appTheme, $controller);
+                if (class_exists($class)) {
+                    $controllerLayer = $controllerLayer . '\\' . $appTheme;
+                }
 
+            }
+        }
         if (!pluginActionExist($plugin.'/'.$controller.'/'.$action, $controllerLayer)) {
             return $this->response(0, "插件方法不存在[".$plugin.'/'.$controller.'/'.$action."]！");
         }
-
         return pluginRun($plugin.'/'.$controller.'/'.$action, $params, $controllerLayer);
     }
 

@@ -166,18 +166,46 @@ class Controller extends Dispatch
     public function controller(string $name)
     {
         $suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
-
-        $controllerLayer = $this->rule->config('controller_layer') ?: 'controller';
+        $controllerLayer = $this->rule->config('controller_layer')?: 'controller';
         $emptyController = $this->rule->config('empty_controller') ?: 'Error';
-
+        if(in_array($controllerLayer, ['admin', 'home'])){
+            $controllerLayer = $this->defaultControllerLayer($controllerLayer, $name, $suffix);
+        }
         $class = $this->app->parseClass($controllerLayer, $name . $suffix);
-
         if (class_exists($class)) {
             return $this->app->make($class, [], true);
         } elseif ($emptyController && class_exists($emptyClass = $this->app->parseClass($controllerLayer, $emptyController . $suffix))) {
             return $this->app->make($emptyClass, [], true);
         }
-
         throw new ClassNotFoundException('class not exists:' . $class, $class);
     }
+
+    protected function defaultControllerLayer($layer, $name, $suffix){
+        if(!$pluginCaches = cache('plugins')){
+            $pluginCaches = \app\system\model\SystemPlugin::where('status', 2)->column('status', 'name');
+            \think\facade\Cache::tag('plugin_tag')->set('plugins', $pluginCaches);
+        }
+        $params = $this->request->param();
+        if (isset($params['_p']) && $params['_p'] && array_key_exists($params['_p'], $pluginCaches)) {
+            $apps = \app\system\model\SystemPlugin::getPlugins();
+            $appName = $params['_p'];
+        } else {
+            $apps = \app\system\model\SystemModule::getModules();
+            $appName = strtolower($this->app['http']->getName());
+        }
+        foreach ($apps as $v) {
+            if ($appName == $v['name'] && 2 == $v['status']) {
+                $appTheme = $v['theme'];
+                break;
+            }
+        }
+        if($appTheme && 'default' != $appTheme){
+            $class = $this->app->parseClass($layer . '\\' . $appTheme, $name . $suffix);
+            if (class_exists($class)) {
+                return $layer . '\\' . $appTheme;
+            }
+        }
+        return $layer;
+    }
+
 }

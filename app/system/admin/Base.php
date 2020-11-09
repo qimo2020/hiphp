@@ -56,8 +56,9 @@ class Base extends Common
                 $this->assign('login', $login);
             }
         }
-        $this->engine()->layout('block/base');
-
+        if('system' == app('http')->getName()){
+            $this->engine()->layout('block/base');
+        }
 
     }
 
