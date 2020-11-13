@@ -56,15 +56,15 @@ layui.define(['jquery', 'form'], function(exports) {
                             $.each(formData[i], function(j){
                                 if(formData[i+'_link'] && formData[i+'_link'][j]){
                                     input.attr({'src':formData[i+'_link'][j]});
+                                    input.parent().find('.multi-priview').append('<li class="item_img"><div class="operate"><i class="close layui-icon">&#xe640;</i></div><a href="' + formData[i+'_link'][j] + '" target="_blank"><img src="' + formData[i+'_link'][j] + '" type="multi" class="field-'+i+'" ></a><input type="hidden" name="'+i+'[]" value="' + formData[i][j] + '" /></li>');;
                                 }else{
                                     input.attr({'src':formData[i][j]});
+                                    input.parent().find('.multi-priview').append('<li class="item_img"><div class="operate"><i class="close layui-icon">&#xe640;</i></div><a href="' + formData[i][j] + '" target="_blank"><img src="' + formData[i][j] + '" type="multi" class="field-'+i+'" ></a><input type="hidden" name="'+i+'[]" value="' + formData[i][j] + '" /></li>');;
                                 }
-                                input.parent().find('.multi-priview').append('<li class="item_img"><div class="operate"><i class="close layui-icon">&#xe640;</i></div><a href="' + formData[i+'_link'][j] + '" target="_blank"><img src="' + formData[i+'_link'][j] + '" type="multi" class="field-'+i+'" ></a><input type="hidden" name="'+i+'[]" value="' + formData[i][j] + '" /></li>');;
                             })
                         }
                         break;
                     case 'inputMulti':
-                        console.log(formData[i]);
                         if (formData[i]) {
                             input = $('.field-'+i).find('input');
                             input.each(function (index, node) {
