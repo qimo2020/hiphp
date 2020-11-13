@@ -37,3 +37,9 @@
 .multi-priview li .operate{ color: #000; display: none;}
 .multi-priview li .close{position: absolute; top: 0; right: 0;cursor:pointer;}
 .multi-priview li:hover .operate{ display: block;}
+
+/*复项多选*/
+
+.layui-form-item .input-multi-inline{
+    width: 85% !important;
+}

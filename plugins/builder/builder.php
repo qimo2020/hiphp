@@ -40,6 +40,8 @@ class builder extends Plugin
     public $buildData = [];
     //[通用修改专用]表单赋值数据
     public $assignData = [];
+    //模型数据列表
+    public $tableHasContact = [];
     public $hooks = [
         'system_builder' => 'run',
     ];
@@ -212,7 +214,7 @@ class builder extends Plugin
                     $model = new $this->hiModel;
                 }
                 $counts = $model->where($this->hiWhere)->count();
-                $data['data'] = $model->where($this->hiWhere)->order($this->hiSort)->page($page,$limit)->select();
+                $data['data'] = $this->tableHasContact ? $model->with($this->tableHasContact)->where($this->hiWhere)->order($this->hiSort)->page($page,$limit)->select():$model->where($this->hiWhere)->order($this->hiSort)->page($page,$limit)->select();
             } else if ($this->hiTable) {
                 $counts = Db::name(strtolower($this->hiTable))->where($this->hiWhere)->count();
                 $data['data'] = Db::name(strtolower($this->hiTable))->where($this->hiWhere)->order($this->hiSort)->page($page,$limit)->select();
@@ -418,7 +420,7 @@ class builder extends Plugin
             $this->hiModel = '';
         }
         if (empty($id)) {
-            return $this->response(0,'缺少id参数');
+            $where = $this->request->param();
         }
         if ($this->hiModel) {
             if (defined('IS_PLUGIN')) {
@@ -431,7 +433,7 @@ class builder extends Plugin
                 $modelObj = new $this->hiModel;
             }
             try {
-                if(is_array($id)){
+                if(!empty($id) && is_array($id)){
                     foreach ($id as $v) {
                         $row = $modelObj->find($v);
                         if (!$row) continue;
@@ -442,7 +444,7 @@ class builder extends Plugin
                         }
                     }
                 }else{
-                    $row = $modelObj->find($id);
+                    $row = isset($where) ? $modelObj->where($where)->find() : $modelObj->find($id);
                     if (!$row) return $this->response(0, '数据不存在');
                     $delRes = $force === false ? $row->delete() : $row->force()->delete();
                     if(!$delRes){

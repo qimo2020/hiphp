@@ -69,7 +69,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">{$v['title']}</label>
             <div class="layui-input-inline">
-                <input type="checkbox" class="field-{$v['name']}" name="{$v['name']}" value="1" lay-skin="switch"{if isset($v['verify'])} lay-verify="{$v['verify']}"{/if} lay-text="{$v['options'][1]}|{$v['options'][0]}" {if isset($v['value']) && $v['value'] == 1}checked=""{/if}>
+                <input type="checkbox" class="field-{$v['name']}" name="{$v['name']}" value="1" lay-skin="switch"{if isset($v['filter'])} lay-filter="{$v['filter']}"{/if}{if isset($v['verify'])} lay-verify="{$v['verify']}"{/if} lay-text="{$v['options'][1]}|{$v['options'][0]}" {if isset($v['value']) && $v['value'] == 1}checked=""{/if}>
             </div>
             <div class="layui-form-mid layui-word-aux">{if isset($v['tips'])}{:htmlspecialchars_decode($v['tips'])}{/if}</div>
         </div>
@@ -79,7 +79,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">{$v['title']}</label>
             <div class="layui-input-inline">
-                <select class="field-{$v['name']}" name="{$v['name']}"{if isset($v['verify'])} lay-verify="{$v['verify']}"{/if}{if isset($v['attribute']) && $v['attribute']} {$v['attribute']}{/if}>
+                <select class="field-{$v['name']}" name="{$v['name']}"{if isset($v['filter'])} lay-filter="{$v['filter']['name']}" hi-filter-field="{$v['filter']['field']}" hi-filter-action="{$v['filter']['action']}" hi-filter-type="{$v['filter']['type']}"{/if}{if isset($v['verify'])} lay-verify="{$v['verify']}"{/if}{if isset($v['attribute']) && $v['attribute']} {$v['attribute']}{/if}>
                     {foreach $v['options'] as $key=>$vv}
                     <option value="{$key}" {if isset($v['value']) && $key == $v['value']}selected{/if}>{$vv}</option>
                     {/foreach}
@@ -94,7 +94,7 @@
             <label class="layui-form-label">{$v['title']}</label>
             <div class="layui-input-inline">
                 {foreach $v['options'] as $key=>$vv}
-                <input type="radio" class="field-{$v['name']}" name="{$v['name']}" value="{$key}" title="{$vv}" {if isset($v['value']) && $key == $v['value']}checked{/if}{if isset($v['attribute']) && $v['attribute']} {$v['attribute']}{/if}>
+                <input type="radio" class="field-{$v['name']}" name="{$v['name']}" value="{$key}" title="{$vv}"{if isset($v['filter'])} lay-filter="{$v['filter']}"{/if}{if isset($v['value']) && $key == $v['value']}checked{/if}{if isset($v['attribute']) && $v['attribute']} {$v['attribute']}{/if}>
                 {/foreach}
             </div>
             <div class="layui-form-mid layui-word-aux">{if isset($v['tips'])}{:htmlspecialchars_decode($v['tips'])}{/if}</div>
@@ -110,6 +110,36 @@
                 {/foreach}
             </div>
             <div class="layui-form-mid layui-word-aux">{if isset($v['tips'])}{:htmlspecialchars_decode($v['tips'])}{/if}</div>
+        </div>
+        {/case}
+        {case value="inputMulti"}
+        <!--复合表单-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$v['title']}</label>
+            <div class="layui-input-inline input-multi-inline">
+                <fieldset class="layui-elem-field check-multi">
+                    <div class="layui-field-box field-{$v['name']}" type="inputMulti">
+                        {foreach $v['options'] as $key=>$vv}
+                        <div class="layui-inline">
+                            <label class="layui-form-label">{$vv['title']}</label>
+                            <div class="layui-input-inline">
+                            {switch name="vv['type']"}
+                            {case value="input"}
+                            <input type="text" class="layui-input field-text-{$v['name']}" name="{$v['name']}[{$vv['title']}]" placeholder="" autocomplete="off">
+                            {/case}
+                            {case value="radio"}
+                            {foreach $vv['options'] as $kk=>$vvv}
+                            <input type="radio" class="field-radio-{$v['name']}" name="{$v['name']}[{$vv['title']}]" value="{$vvv}" title="{$vvv}">
+                            {/foreach}
+                            {/case}
+                            {/switch}
+                            </div>
+                            <div class="layui-form-mid layui-word-aux">{if isset($vv['tips'])}{:htmlspecialchars_decode($vv['tips'])}{/if}</div>
+                        </div>
+                        {/foreach}
+                    </div>
+                </fieldset>
+            </div>
         </div>
         {/case}
         {case value="date"}
@@ -341,6 +371,7 @@
         });
     });
 </script>
+<script src="__PUBLIC_STATIC__/p_builder/js/form.js?v={:config('builder.version')}"></script>
 {/if}
 </body>
 </html>

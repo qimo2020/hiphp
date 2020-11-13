@@ -63,6 +63,26 @@ layui.define(['jquery', 'form'], function(exports) {
                             })
                         }
                         break;
+                    case 'inputMulti':
+                        console.log(formData[i]);
+                        if (formData[i]) {
+                            input = $('.field-'+i).find('input');
+                            input.each(function (index, node) {
+                                let target = node.type;
+                                $.each($.parseJSON(formData[i]), function(k, v){
+                                    if(target == 'text'){
+                                        if(node.name == i+'['+k+']'){
+                                            node.value = v;
+                                        }
+                                    }else if(target == 'radio'){
+                                        if(node.name == i+'['+k+']' && node.value == v){
+                                            node.checked = true;
+                                        }
+                                    }
+                                })
+                            })
+                        }
+                        break;
                     case 'file':
                         if (formData[i]) {
                             input = $('.field-'+i);
