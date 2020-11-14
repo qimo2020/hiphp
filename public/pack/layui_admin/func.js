@@ -78,6 +78,14 @@ layui.define(['jquery', 'form'], function(exports) {
                                         if(node.name == i+'['+k+']' && node.value == v){
                                             node.checked = true;
                                         }
+                                    }else if(target == 'checkbox'){
+                                        if (typeof(v) == 'object') {
+                                            $.each(v, function (kk, vv) {
+                                                if (node.name == i + '[' + k + '][]' && node.value == vv) {
+                                                    node.checked = true;
+                                                }
+                                            })
+                                        }
                                     }
                                 })
                             })

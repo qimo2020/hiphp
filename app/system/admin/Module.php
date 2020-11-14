@@ -137,37 +137,36 @@ class Module extends Base
             }
             $pushs = runHook('cloud_push', ['type'=>'module', 'method'=>$status == 3 ? 'upgrade' : 'download'], true);
             if($pushs && $pushs[0]) {
+                $upgrades = [];
                 foreach ($modules as $k => $v) {
                     foreach ($pushs[0] as $kk => $vv) {
                         $dependAppIns = in_array($vv['app_type'], ['component', 'theme']);
                         if ($status == 3) {
                             if ($v['name'] == $vv['app_name']) {
                                 if($v['app_keys'] == $vv['app_key'] && $v['app_id'] == $vv['app_id'] && version_compare($vv['version'], $v['version'], '>')){
-                                    $modules[$k] = $v;
-                                    $modules[$k]['app_name'] = $dependAppIns ? $vv['app_name'] : $v['name'];
+                                    $upgrades[$k] = $v;
+                                    $upgrades[$k]['app_name'] = $dependAppIns ? $vv['app_name'] : $v['name'];
                                     unset($modules[$k]['name']);
-                                    $modules[$k]['up_version'] = $vv['version'];
-                                    $modules[$k]['status'] = 3;
-                                    $modules[$k]['app_type'] = $vv['app_type'];
-                                    $modules[$k]['version'] = $vv['version'];
-                                    $modules[$k]['type'] = $vv['type'];
-                                    $modules[$k]['file_size'] = $vv['file_size'];
+                                    $upgrades[$k]['up_version'] = $vv['version'];
+                                    $upgrades[$k]['status'] = 3;
+                                    $upgrades[$k]['app_type'] = $vv['app_type'];
+                                    $upgrades[$k]['version'] = $vv['version'];
+                                    $upgrades[$k]['type'] = $vv['type'];
+                                    $upgrades[$k]['file_size'] = $vv['file_size'];
                                     if ($dependAppIns) {
-                                        $modules[$k]['title'] = $vv['title'];
-                                        $modules[$k]['system'] = 0;
+                                        $upgrades[$k]['title'] = $vv['title'];
+                                        $upgrades[$k]['system'] = 0;
                                     }
                                     if (isset($vv['theme_name'])) {
-                                        $modules[$k]['theme_name'] = $vv['theme_name'];
+                                        $upgrades[$k]['theme_name'] = $vv['theme_name'];
                                     }
-                                    $modules[$k]['app_title'] = $vv['app_title'];
+                                    $upgrades[$k]['app_title'] = $vv['app_title'];
                                 }else{
                                     $classModel = '\app\system\model\System'.ucfirst($vv['app_type']);
                                     $classModel::where('name', $v['name'])->update(['app_id'=>$vv['app_id'], 'app_keys'=>$vv['app_key']]);
-                                    unset($modules[$k]);
                                 }
-                            } else {
-                                unset($modules[$k]);
                             }
+                            $modules = $upgrades;
                         } else {
                             if (($v['name'] && $v['name'] == $vv['app_name'] && !$dependAppIns) || ($dependAppIns && $v['app_id'] && $v['app_id'] == $vv['app_id'])) {
                                 unset($pushs[0][$kk]);

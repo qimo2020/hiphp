@@ -126,36 +126,35 @@ class Plugin extends Base
             }
             $pushs = runHook('cloud_push', ['type'=>'plugin', 'method'=>$status == 3 ? 'upgrade' : 'download'], true);
             if($pushs && $pushs[0]){
+                $upgrades = [];
                 foreach ($plugins as $k=>$v){
                     foreach ($pushs[0] as $kk=>$vv){
                         $dependAppIns = in_array($vv['app_type'], ['component', 'theme']);
                         if($status == 3){
                             if($v['name'] == $vv['app_name']){
                                 if($v['app_keys'] && $v['app_id'] && $v['app_keys'] == $vv['app_key'] && $v['app_id'] == $vv['app_id'] && version_compare($vv['version'], $v['version'],'>')){
-                                    $plugins[$k] = $v;
-                                    $plugins[$k]['app_name'] = $v['name'];
-                                    $plugins[$k]['up_version'] = $vv['version'];
-                                    $plugins[$k]['status'] = 3;
-                                    $plugins[$k]['app_type'] = $vv['app_type'];
-                                    $plugins[$k]['version'] = $vv['version'];
-                                    $plugins[$k]['type'] = $vv['type'];
-                                    $plugins[$k]['file_size'] = $vv['file_size'];
+                                    $upgrades[$k] = $v;
+                                    $upgrades[$k]['app_name'] = $v['name'];
+                                    $upgrades[$k]['up_version'] = $vv['version'];
+                                    $upgrades[$k]['status'] = 3;
+                                    $upgrades[$k]['app_type'] = $vv['app_type'];
+                                    $upgrades[$k]['version'] = $vv['version'];
+                                    $upgrades[$k]['type'] = $vv['type'];
+                                    $upgrades[$k]['file_size'] = $vv['file_size'];
                                     if($dependAppIns){
-                                        $plugins[$k]['title'] = $vv['title'];
-                                        $plugins[$k]['system'] = 0;
+                                        $upgrades[$k]['title'] = $vv['title'];
+                                        $upgrades[$k]['system'] = 0;
                                     }
                                     if(isset($vv['theme_name'])){
-                                        $plugins[$k]['theme_name'] = $vv['theme_name'];
+                                        $upgrades[$k]['theme_name'] = $vv['theme_name'];
                                     }
-                                    $plugins[$k]['app_title'] = $vv['app_title'];
+                                    $upgrades[$k]['app_title'] = $vv['app_title'];
                                 }else{
                                     $classModel = '\app\system\model\System'.ucfirst($vv['app_type']);
                                     $classModel::where('name', $v['name'])->update(['app_id'=>$vv['app_id'], 'app_keys'=>$vv['app_key']]);
-                                    unset($plugins[$k]);
                                 }
-                            }else{
-                                unset($plugins[$k]);
                             }
+                            $plugins = $upgrades;
                         }else{
                             if(($v['name'] && $v['name'] == $vv['app_name'] && !$dependAppIns) || ($dependAppIns && $v['app_id'] && $v['app_id'] == $vv['app_id'])){
                                 unset($pushs[0][$kk]);
@@ -173,6 +172,7 @@ class Plugin extends Base
                 $plugins = [];
             }
         }
+
         $this->assign('page', ['page'=>$status]);
         $this->assign('emptyTips', '<div class="hi-no-data-tips" style="padding: 50px 0;text-align: center">未发现相关插件，快去<a target="_blank" href="' . config('clouds.store_push_domain') . '"> <strong style="color:#428bca">应用市场</strong> </a>看看吧！</div>');
         $this->assign('dataInfo', array_values($plugins));

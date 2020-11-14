@@ -117,28 +117,33 @@
         <div class="layui-form-item">
             <label class="layui-form-label">{$v['title']}</label>
             <div class="layui-input-inline input-multi-inline">
+                {if $v['options']}
                 <fieldset class="layui-elem-field check-multi">
                     <div class="layui-field-box field-{$v['name']}" type="inputMulti">
                         {foreach $v['options'] as $key=>$vv}
                         <div class="layui-inline">
-                            <label class="layui-form-label">{$vv['title']}</label>
+                            <label class="layui-form-label">{$vv['name']}</label>
                             <div class="layui-input-inline">
-                            {switch name="vv['type']"}
-                            {case value="input"}
-                            <input type="text" class="layui-input field-text-{$v['name']}" name="{$v['name']}[{$vv['title']}]" placeholder="" autocomplete="off">
-                            {/case}
-                            {case value="radio"}
-                            {foreach $vv['options'] as $kk=>$vvv}
-                            <input type="radio" class="field-radio-{$v['name']}" name="{$v['name']}[{$vv['title']}]" value="{$vvv}" title="{$vvv}">
-                            {/foreach}
-                            {/case}
-                            {/switch}
+                            {if $vv['options'] == ''}
+                            <input type="text" class="layui-input field-text-{$v['name']}" name="{$v['name']}[{$vv['name']}]" placeholder="" autocomplete="off">
+                            {else}
+                                {if $vv['type'] == 'radio'}
+                                    {foreach $vv['options'] as $kk=>$vvv}
+                                    <input type="radio" class="field-radio-{$v['name']}" name="{$v['name']}[{$vv['name']}]" value="{$vvv}" title="{$vvv}">
+                                    {/foreach}
+                                {else}
+                                    {foreach $vv['options'] as $kk=>$vvv}
+                                    <input type="checkbox" class="field-checkbox-{$v['name']}" name="{$v['name']}[{$vv['name']}][]" value="{$vvv}" title="{$vvv}" lay-skin="primary">
+                                    {/foreach}
+                                {/if}
+                            {/if}
                             </div>
                             <div class="layui-form-mid layui-word-aux">{if isset($vv['tips'])}{:htmlspecialchars_decode($vv['tips'])}{/if}</div>
                         </div>
                         {/foreach}
                     </div>
                 </fieldset>
+                {/if}
             </div>
         </div>
         {/case}

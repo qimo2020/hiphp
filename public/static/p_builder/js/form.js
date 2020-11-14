@@ -1,7 +1,7 @@
 layui.use(['jquery', 'form'], function() {
     var $ = layui.jquery, form = layui.form;
     $('input[lay-filter],select[lay-filter]').each(function(){
-        var tagName = $(this)[0].tagName.toLowerCase(), filterType = '', inputType = '', filterName = $(this).attr('lay-filter'), field = $(this).attr('hi-filter-field'), action = $(this).attr('hi-filter-action'), type = $(this).attr('hi-filter-type'), targetField = $('.field-'+field);
+        var tagName = $(this)[0].tagName.toLowerCase(), filterType = '', inputType = '', filterName = $(this).attr('lay-filter'), field = $(this).attr('hi-filter-field'), action = $(this).attr('hi-filter-action'), type = $(this).attr('hi-filter-type');
         if(tagName == 'select'){
             filterType = 'select';
         }else{
@@ -39,22 +39,32 @@ layui.use(['jquery', 'form'], function() {
     });
 
     function html(type, field, data) {
-        let html = '', targetField = $('.field-'+field);
+        let html = '<fieldset class="layui-elem-field check-multi"><div class="layui-field-box field-'+field+'" type="inputMulti">';
         switch (type) {
             case 'inputMulti':
-                let parent = targetField.closest('.layui-field-box');
+                let parent = $('.input-multi-inline'), multis = [];
                 $.each(data, function(i, val){
-                    html += ' <div class="layui-inline"><label class="layui-form-label">'+val.name+'</label><div class="layui-input-inline">';
+                    html += '<div class="layui-inline"><label class="layui-form-label">'+val.name+'</label><div class="layui-input-inline">';
                     if(val.options == ''){
                         html += '<input type="text" class="layui-input field-text-'+field+'" name="'+field+'['+val.name+']" placeholder="" autocomplete="off">';
                     }else{
                         for(let j=0; j<val.options.length; j++){
-                            html += '<input type="radio" class="layui-input field-radio-'+field+'" name="'+field+'['+val.name+']" value="'+val.options[j]+'" title="'+val.options[j]+'">';
+                            if(val.type == 'radio'){
+                                html += '<input type="radio" class="layui-input field-radio-'+field+'" name="'+field+'['+val.name+']" value="'+val.options[j]+'" title="'+val.options[j]+'">';
+                            }else if(val.type == 'checkbox'){
+                                $.each(val.options, function(x, v) {
+                                    if(multis.indexOf(v) < 0){
+                                        multis.push(v);
+                                        html += '<input type="checkbox" class="field-checkbox-' + field + '" name="' + field + '[' + val.name + '][]" value="' + v + '" title="' + v + '" lay-skin="primary">';
+                                    }
+                                })
+                            }
                         }
                     }
                     html += '</div><div class="layui-form-mid layui-word-aux">';
                     html += '</div></div>';
                 });
+                html += '</div></fieldset>';
                 parent.html(html);
                 break;
         }
