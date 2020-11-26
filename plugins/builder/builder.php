@@ -42,6 +42,8 @@ class builder extends Plugin
     public $assignData = [];
     //模型数据列表
     public $tableHasContact = [];
+    //数据保存条件
+    public $multiPriCondition = [];
     public $hooks = [
         'system_builder' => 'run',
     ];
@@ -325,10 +327,21 @@ class builder extends Plugin
                         }
                     }
                 }
+                $condition = [];
                 if ($this->hiModel) {// 通过Model添加
                     if(isset($postData[$pk]) && is_numeric($postData[$pk])){
                         $this->dataId = $postData[$pk];
                         $result = $model->where([$pk => $postData[$pk]])->strict(false)->update($postData);
+                    }else if($this->multiPriCondition){
+                        foreach ($this->multiPriCondition as $c){
+                            $condition[$c] = $postData[$c];
+                        }
+                        if(null === $model->where($condition)->find()){
+                            $result = $model->create($postData);
+                            $this->dataId = $result->$pk;
+                        }else{
+                            $result = $model->where($condition)->strict(false)->update($postData);
+                        }
                     }else{
                         $result = $model->create($postData);
                         $this->dataId = $result->$pk;
@@ -340,6 +353,15 @@ class builder extends Plugin
                     if(isset($postData[$pk]) && is_numeric($postData[$pk])){
                         $this->dataId = $postData[$pk];
                         $result = $db->where($pk, $postData[$pk])->strict(false)->update($postData);
+                    }else if($this->multiPriCondition){
+                        foreach ($this->multiPriCondition as $c){
+                            $condition[$c] = $postData[$c];
+                        }
+                        if(null === $db->where($condition)->find()){
+                            $result = $this->dataId = $db->strict(false)->insertGetId($postData);
+                        }else{
+                            $result = $db->where($condition)->strict(false)->update($postData);
+                        }
                     }else{
                         $result = $this->dataId = $db->strict(false)->insertGetId($postData);
                     }
@@ -365,19 +387,30 @@ class builder extends Plugin
             } catch (\Exception $e) {
                 Db::rollback();
                 if(method_exists($this->app,'getError')){
-                    return $this->response(0, $this->app->getError());
+                    return $this->response(0, $e->getMessage());
                 }else{
                     return $this->response(0, 'error');
                 }
             }
         }
-        $pkVal = $this->request->param($pk);
+        $params = $this->request->param();
+        $condition = [];
+        if(isset($params[$pk])){
+            $condition[$pk] = $params[$pk];
+            $this->buildData['buildForm']['items'][] = ['name'=>$pk, 'type'=>'hidden', 'value'=>$params[$pk]];
+        }else if($this->multiPriCondition){
+            foreach ($this->multiPriCondition as $c){
+                if(isset($params[$c])){
+                    $condition[$c] = $params[$c];
+                }
+            }
+        }
         $row = [];
-        if(isset($pkVal) && is_numeric($pkVal)){
+        if($condition){
             if ($this->hiModel) {
-                $row = $model->where($pk, $pkVal)->find()->toArray();
+                $row = $model->where($condition)->find()->toArray();
             }else if($this->hiTable){
-                $row = $db->where($pk, $pkVal)->find();
+                $row = $db->where($condition)->find();
             }
             //资源数据解析
             if(method_exists($this->app,'annexGet')){
@@ -387,7 +420,6 @@ class builder extends Plugin
                 $format = json_decode((string)$v, true);
                 if($format) $v = $format;
             }
-            $this->buildData['buildForm']['items'][] = ['name'=>$pk, 'type'=>'hidden', 'value'=>$pkVal];
         }
         //合并赋值数据
         if(!empty($row) && !empty($this->assignData)){

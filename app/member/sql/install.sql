@@ -1,10 +1,10 @@
 CREATE TABLE `pre_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uuid` varchar(36) NOT NULL,
-  `nick` varchar(30) NOT NULL COMMENT '昵称',
-  `avatar` varchar(60) NOT NULL COMMENT '头像',
+  `nick` varchar(30) COMMENT '昵称',
+  `avatar` varchar(200) COMMENT '头像',
   `status` tinyint(1) NOT NULL DEFAULT '2' COMMENT '会员状态:-1未激活/0禁用/1待审/2正常',
-  `last_login_ip` varchar(128) NOT NULL COMMENT '最后登陆IP',
+  `last_login_ip` varchar(128) COMMENT '最后登陆IP',
   `last_login_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后登陆时间',
   `create_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
@@ -32,7 +32,7 @@ CREATE TABLE `pre_member_auth` (
   `tid` varchar(11) NOT NULL COMMENT '授权类型ID',
   `member_id` int(10) unsigned NOT NULL COMMENT '会员id',
   `account` varchar(60) NOT NULL COMMENT '账号(如:普通账号,手机号码,邮箱地址,身份证号码等)',
-  `password` varchar(60) NOT NULL COMMENT '密码',
+  `password` varchar(200) COMMENT '密码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员授权映射表';
 

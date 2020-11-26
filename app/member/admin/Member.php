@@ -61,7 +61,7 @@ class Member extends Common
             }
             try {
                 validate()->rule(['account'=>['unique:member_auth']])->rule($rules)->message(['account.unique'=>$this->messages['account_exist']])->message($messages)->check($post);
-                validate(\app\member\validate\Member::class)->check($post);
+                validate(\app\member\validate\Group::class)->check($post);
             } catch (\think\exception\ValidateException $e) {
                 return $this->response(0, $e->getError());
             }

@@ -162,7 +162,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">{$v['title']}</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input layui-date field-{$v['name']}" name="{$v['name']}" value="{if isset($v['value'])}{$v['value']}{/if}" autocomplete="off" placeholder="{if isset($v['placeholder'])}{$v['placeholder']}{else/}请填写{$v['title']}{/if}"{if isset($v['verify'])} lay-verify="{$v['verify']}"{/if}>
+                <input type="text" class="layui-input layui-date-time field-{$v['name']}" name="{$v['name']}" value="{if isset($v['value'])}{$v['value']}{/if}" autocomplete="off" placeholder="{if isset($v['placeholder'])}{$v['placeholder']}{else/}请填写{$v['title']}{/if}"{if isset($v['verify'])} lay-verify="{$v['verify']}"{/if}>
             </div>
             <div class="layui-form-mid layui-word-aux">{if isset($v['tips'])}{:htmlspecialchars_decode($v['tips'])}{/if}</div>
         </div>
@@ -363,11 +363,18 @@
             };
             upload.render(options);
         });
-
         /* 绑定多个日期控件 */
         $('.layui-date').each(function(i) {
             laydate.render({
                 elem: this
+                ,trigger: 'click'
+            });
+        });
+        /* 绑定多个日期时间控件 */
+        $('.layui-date-time').each(function(i) {
+            laydate.render({
+                elem: this
+                ,type: 'datetime'
                 ,trigger: 'click'
             });
         });

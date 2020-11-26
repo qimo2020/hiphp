@@ -11,7 +11,7 @@ return [
     'intro' => '表单和表格构建器，ui使用了layui',
     'author' => 'HiPHP',
     'icon' => '',
-    'version' => '1.0.4',
+    'version' => '1.0.5',
     'tables'=>[],
     'author_url' => '',
     'module_depend'=>[],

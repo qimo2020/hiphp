@@ -36,7 +36,7 @@ class Oauth extends Common
             return json(['code'=>0, 'msg'=>'密码错误']);
         }
         $member = \app\member\model\Member::find($result['member_id']);
-        $tag = 'hi_token_' . $headers['client'] . $member['uuid'];
+        $tag = 'token_' . $headers['client'] . $member['uuid'];
         $token = randomStr(rand(80, 100), 8);
         $expire = configs('api')['user_token_expire'];
         cache($tag, $token, ['expire' => $expire * 60 * 60], 'api_module');
