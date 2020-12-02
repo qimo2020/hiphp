@@ -1,7 +1,7 @@
 CREATE TABLE `pre_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uuid` varchar(36) NOT NULL,
-  `nick` varchar(30) COMMENT '昵称',
+  `nick` varchar(60) COMMENT '昵称',
   `avatar` varchar(200) COMMENT '头像',
   `status` tinyint(1) NOT NULL DEFAULT '2' COMMENT '会员状态:-1未激活/0禁用/1待审/2正常',
   `last_login_ip` varchar(128) COMMENT '最后登陆IP',
@@ -23,7 +23,7 @@ CREATE TABLE `pre_member_auth_type` (
   `rule` text COMMENT '字段验证规则',
   `message` text COMMENT '字段验证错误提示',
   `check_after` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否插件验证',
-  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `status` tinyint(1) unsigned DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员授权类型表';
 
