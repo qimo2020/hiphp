@@ -109,7 +109,7 @@ class Error extends Common
                 $post['tid'] = $post['account_type'];
                 $model = new MemberModel();
                 if (false === $res = $model->_save($post)) {
-                    return $this->response(0, $model::$error);
+                    return $this->response(0, $this->langvars['regist_fail']);
                 }
                 $login = [];
                 $login['uid'] = $res['id'];
