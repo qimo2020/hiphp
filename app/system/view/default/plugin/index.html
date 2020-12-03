@@ -59,9 +59,6 @@
                     <a data-href="{:url('del',['id'=>$vo['id']])}" class="layui-btn layui-btn-danger layui-btn-sm j-tr-del">删除</a>
                     {/case}
                     {case value="1"}
-                    {if condition="$vo['app_keys']"}
-                    <a href="{:url('upgrade/lists?app_type=module&identifier='.$vo['identifier'])}" class="layui-btn layui-btn-warm layui-btn-sm">更新</a>
-                    {/if}
                     <a href="{:url('status?id='.$vo['id'].'&v=1')}" class="layui-btn hi-bgcolor7 layui-btn-sm">启用</a>
                     <a href="{:url('uninstall?id='.$vo['id'])}" class="layui-btn layui-btn-danger layui-btn-sm">卸载</a>
                     {/case}
@@ -71,9 +68,6 @@
                     <a href="{:url('theme?id='.$vo['id'])}" class="layui-btn hi-bgcolor5 layui-btn-sm">主题</a>
                     {/if}
                     <a href="{:url('status?id='.$vo['id'].'&v=0')}" class="layui-btn hi-bgcolor4 layui-btn-sm">禁用</a>
-                    {if condition="$vo['app_keys']"}
-                    <a href="{:url('upgrade/lists?app_type=module&identifier='.$vo['identifier'])}" class="layui-btn hi-bgcolor1 layui-btn-sm">更新</a>
-                    {/if}
                     <a href="{:url('uninstall?id='.$vo['id'])}" class="layui-btn layui-btn-danger layui-btn-sm">卸载</a>
                     {/case}
                     {case value="3"}
