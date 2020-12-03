@@ -168,7 +168,7 @@ class Controller extends Dispatch
         $suffix = $this->rule->config('controller_suffix') ? 'Controller' : '';
         $controllerLayer = $this->rule->config('controller_layer')?: 'controller';
         $emptyController = $this->rule->config('empty_controller') ?: 'Error';
-        if(in_array($controllerLayer, ['admin', 'home'])){
+        if(!defined('INSTALL_ENTRANCE') && in_array($controllerLayer, ['admin', 'home'])){
             $controllerLayer = $this->defaultControllerLayer($controllerLayer, $name, $suffix);
         }
         $class = $this->app->parseClass($controllerLayer, $name . $suffix);
