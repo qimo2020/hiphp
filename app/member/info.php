@@ -46,7 +46,7 @@ return [
     'module_depend' => [],
     // 插件依赖[可选]，格式[[插件名, 插件唯一标识, 依赖版本, 对比方式]]
     'plugin_depend' => [
-        ['builder','builder.plugin','1.0.4', '>=']
+        ['builder','builder.plugin','1.0.4','>=']
     ],
     // 模块数据表[有数据库表时必填,不包含表前缀]
     'tables' => [

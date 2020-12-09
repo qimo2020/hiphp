@@ -44,6 +44,7 @@ class member extends Module
      * @author 祈陌 <3411869134@qq.com>
      */
     public function upgradeAfter(){
+
         return true;
     }
     /**

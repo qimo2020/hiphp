@@ -16,7 +16,6 @@ class Member extends Common
             $page = $this->request->param('page/d', 1);
             $limit = $this->request->param('limit/d', 30);
             $data['data'] = memberModel::withJoin('auth', 'LEFT')->where([['auth.account','<>','']])->page($page)->limit($limit)->select();
-
             $data['count'] = memberModel::count('id');
             $data['code'] = 0;
             $data['msg'] = '';
@@ -40,7 +39,7 @@ class Member extends Common
         }else{
             $params = $this->request->get();
             $this->buiderObj->assignData['tid'] = $params['tid'];
-            $first = \app\member\model\MemberAuth::find($params['id']);
+            $first = \app\member\model\MemberAuth::where(['member_id'=>$params['id'], 'tid'=>$params['tid']])->find();
             $this->buiderObj->assignData['account'] = $first->account;
         }
         return $this->buiderObj->_save([], 'edit');
@@ -60,8 +59,7 @@ class Member extends Common
                 $messages[$type['identifier'].'.'.(strpos($rulesArr[$k], ':') !== false ? explode(':', $rulesArr[$k])[0] : $rulesArr[$k])] = $v;
             }
             try {
-                validate()->rule(['account'=>['unique:member_auth']])->rule($rules)->message(['account.unique'=>$this->messages['account_exist']])->message($messages)->check($post);
-                validate(\app\member\validate\Group::class)->check($post);
+                validate()->rule($rules)->message($messages)->check($post);
             } catch (\think\exception\ValidateException $e) {
                 return $this->response(0, $e->getError());
             }

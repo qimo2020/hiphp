@@ -28,12 +28,11 @@ CREATE TABLE `pre_member_auth_type` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员授权类型表';
 
 CREATE TABLE `pre_member_auth` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `tid` varchar(11) NOT NULL COMMENT '授权类型ID',
+  `tid` int(10) unsigned NOT NULL COMMENT '授权类型ID',
   `member_id` int(10) unsigned NOT NULL COMMENT '会员id',
   `account` varchar(60) NOT NULL COMMENT '账号(如:普通账号,手机号码,邮箱地址,身份证号码等)',
   `password` varchar(200) COMMENT '密码',
-  PRIMARY KEY (`id`)
+  primary key (tid,member_id,account)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='会员授权映射表';
 
 
