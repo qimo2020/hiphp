@@ -146,7 +146,7 @@
                 cols[key].templet = eval('('+cols[key].templet+')');
             }
         }
-        var options = {elem: '#dataTable', id:'dataTable', url: '{if isset($_GET["_p"])}{:url()}?_p={$_GET["_p"]}&_c={$_GET["_c"]}&_a={$_GET["_a"]}{else/}'+window.location.href+'{/if}',skin: 'row',even: true,text: {none : '暂无相关数据'},cols:[cols],page: true};
+        var options = {elem: '#dataTable', id:'dataTable', url: '{if isset($_GET["_p"])}{:url()}?_p={$_GET["_p"]}&_c={$_GET["_c"]}&_a={$_GET["_a"]}{else/}'+window.location.href+'{/if}',skin: 'row',even: true,text: {none : '暂无相关数据'},cols:[cols],page: true,limit: "{if isset($hiLimitNum)}{$hiLimitNum}{else}15{/if}"};
         if(buildData.buildTable.hasOwnProperty("toolbar")){
             options.toolbar = '#toolbar'
         }

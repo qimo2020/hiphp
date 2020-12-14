@@ -42,7 +42,7 @@ class builder extends Plugin
     public $assignData = [];
     //模型数据列表
     public $tableHasContact = [];
-    //数据保存条件
+    //复合主键条件[注意:此模式禁止在修改操作中调整包含的条件]
     public $multiPriCondition = [];
     public $hooks = [
         'system_builder' => 'run',
@@ -234,6 +234,7 @@ class builder extends Plugin
         $this->assign('jsCode', $this->jsCode);
         $this->assign('cssCode', $this->cssCode);
         $this->assign('buildData', $this->buildData);
+        $this->assign('hiLimitNum', $this->hiLimitNum);
         return $this->view('build/table');
     }
 
