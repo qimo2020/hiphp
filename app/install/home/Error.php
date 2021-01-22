@@ -45,13 +45,13 @@ class Error extends Common
                 break;
             case 3:
                 if (session('install_error')) {
-                    return $this->response(0,'环境检测未通过，不能进行下一步操作！','/install/step=2');
+                    return $this->response(0,'环境检测未通过，不能进行下一步操作！','/?s=install/step=2');
                 }
                 return self::step3();
                 break;
             case 4:
                 if (session('install_error')) {
-                    return $this->response(0,'环境检测未通过，不能进行下一步操作！','/install/step=3');
+                    return $this->response(0,'环境检测未通过，不能进行下一步操作！','/?s=install/step=3');
                 }
                 return self::step4();
                 break;
@@ -203,7 +203,7 @@ class Error extends Common
                     try {
                         Db::execute($v);
                     } catch (\Exception $e) {
-                        return $this->response(0,$e->getMessage(),'/install/step=3');
+                        return $this->response(0,$e->getMessage(),'/?s=install/step=3');
                     }
                 }
             }

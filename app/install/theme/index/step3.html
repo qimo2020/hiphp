@@ -10,7 +10,7 @@
     <fieldset class="layui-elem-field layui-field-title">
         <legend>数据库配置</legend>
     </fieldset>
-    <form class="layui-form layui-form-pane" action="/install/step=4" method="post">
+    <form class="layui-form layui-form-pane" action="/?s=install/step=4" method="post">
         <div class="layui-form-item">
             <label class="layui-form-label">服务器地址</label>
             <div class="layui-input-inline w200">
@@ -65,7 +65,7 @@
             <button type="submit" class="layui-btn fl next-step" style="margin-left:120px;" lay-submit="" lay-filter="formTest">测试数据库连接</button>
         </div>
     </form>
-    <form class="layui-form layui-form-pane" action="/install/step=5" method="post">
+    <form class="layui-form layui-form-pane" action="/?s=install/step=5" method="post">
         <fieldset class="layui-elem-field layui-field-title">
             <legend>管理账号设置</legend>
         </fieldset>
@@ -84,7 +84,7 @@
             <div class="layui-form-mid layui-word-aux">保证密码最少6位</div>
         </div>
         <div class="step-btns">
-            <a href="/install/step=2" class="layui-btn layui-btn-primary layui-btn-big fl">返回上一步</a>
+            <a href="/?s=install/step=2" class="layui-btn layui-btn-primary layui-btn-big fl">返回上一步</a>
             <button type="submit" class="layui-btn layui-btn-big layui-btn-normal fr next-step" lay-submit="" lay-filter="formSubmit">立即执行安装</button>
         </div>
     </form>
