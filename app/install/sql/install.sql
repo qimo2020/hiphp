@@ -307,7 +307,7 @@ CREATE TABLE `hi_system_plugin` (
 INSERT INTO `hi_system_plugin` (`id`, `system`, `name`, `title`, `icon`, `intro`, `author`, `url`, `version`, `identifier`, `app_id`, `app_keys`, `theme`, `mobile_theme`,`create_time`, `update_time`, `sort`, `status`)
 VALUES
   (1, 1, 'cloud', '云平台推送', '', '云平台推送', 'HiPHP', 'http://www.hiphp.net', '1.0.0', 'cloud.plugin', '', '', '', '', 1579153755, 1579153755, 0, 2),
-  (2, 0, 'builder', '构建器', '', 'HiPHP构建器', 'HiPHP', 'http://www.hiphp.net', '1.0.0', 'builder.plugin', '', '', '', '', 1579153755, 1579153755, 0, 2);
+  (2, 0, 'builder', '构建器', '', 'HiPHP构建器', 'HiPHP', 'http://www.hiphp.net', '1.0.6', 'builder.plugin', '', '', '', '', 1579153755, 1579153755, 0, 2);
 
 
 # Dump of table hi_system_component
